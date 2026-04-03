@@ -1,4 +1,4 @@
-# Meal Planner Web Application
+# Meal Planner — Architecture Reference
 
 ## Context
 
@@ -307,65 +307,6 @@ POST /pantry/add/               → add item (Phase 2)
 
 ---
 
-## Implementation Phases
-
-### Phase 1 — MVP
-1. Django project setup, apps, models, migrations
-2. `.env` config, Anthropic client singleton
-3. `dietitian_agent.md` — Claude CLI agent definition + nutrition plan JSON schema
-4. Nutrition plan import view (paste JSON → save `NutritionPlan`)
-5. Meal planner agent — prompt, JSON parse, DB persist
-6. Week plan view + generate endpoint
-7. Meal swap (single meal regeneration)
-8. Shopping list generation + view
-
-### Phase 2 — Polish
-- Pantry tracking (models + views)
-- Pantry-aware meal plan prompt (exclude items user already has from shopping list)
-- Historical week plans (browse past plans)
-- Nutrition summary bar (daily totals vs targets, color coded)
-- Export shopping list to plain text / printable page
-
-### Phase 3 — Meal Feedback & Rating
-Track which meals were actually made and how much you liked them. This data feeds back into future meal plan generation.
-
-**Schema additions to `PlannedMeal`:**
-```python
-was_made: bool                    # did you actually cook/eat this meal?
-rating: int | None                # 1 = disliked, 2 = average, 3 = liked
-rating_notes: str(blank=True)     # optional free-text (e.g. "too salty")
-rated_at: datetime | None
-```
-
-**UI:** On the week plan view, each meal cell gets a small "Did you make it?" toggle + 1/2/3 star tap (HTMX POST → updates in place, no page reload).
-
-**How it drives future plans:** When generating a new meal plan, the meal planner prompt includes a summary of rated recipes:
-- Rating 1 meals → added to `disliked_meals` list (avoid repeating)
-- Rating 3 meals → added to `liked_meals` list (repeat occasionally, use as style reference)
-- Unrated or rating 2 → neutral, can appear again
-
-### Phase 4 — Second Brain Integration
-Query the second brain before generating meal plans to incorporate free-form notes and patterns captured over time.
-
-- **Dietitian agent**: query second brain for health/diet context before the intake interview
-- **Meal plan generation**: pull recent meal reflections and liked/disliked patterns into the Claude prompt alongside structured DB ratings
-- **Weekly reflections**: capture a short free-text review each week ("liked the Mediterranean meals, dinners felt too heavy") as a second brain thought
-- **Semantic search**: "what cuisines do we consistently rate 3?" surfaced into future plan prompts
-
-Structured data (ratings, nutrition, ingredients) stays in Django DB. Second brain handles free-form notes and cross-domain context.
-
-### Phase 5 — Multi-user
-Designed for single-user in Phase 1, but built to be easy to extend. Migration path:
-1. Enable `django.contrib.auth` (already included in Django, zero extra packages)
-2. Add `user = FK(User, on_delete=CASCADE)` to `NutritionPlan` and `MealPlan`
-3. Add `login/logout` views + a simple login template
-4. Add `@login_required` to all views, filter all querysets by `request.user`
-5. Each person runs their own `dietitian_agent.md` CLI session and imports their own JSON
-
-No structural changes to recipes, ingredients, or shopping logic needed.
-
----
-
 ## Critical Files
 
 - `dietitian_agent.md` — Claude CLI agent definition; quality of the intake conversation + JSON output schema
@@ -376,7 +317,7 @@ No structural changes to recipes, ingredients, or shopping logic needed.
 
 ---
 
-## Verification
+## Verification Checklist
 
 1. `python manage.py migrate` — all tables created clean
 2. Run `claude` with `dietitian_agent.md` → complete intake conversation → `nutrition_plan.json` written
