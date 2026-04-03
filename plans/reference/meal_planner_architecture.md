@@ -7,7 +7,9 @@ The user wants a personal nutrition and meal planning web application powered by
 1. **Dietitian Stage (Claude CLI)** — The user runs a separate Claude CLI conversation against a markdown agent definition (`dietitian_agent.md`) to figure out their personal nutrition plan. The output is a structured `nutrition_plan.json` file.
 2. **Meal Planner Web App (Django)** — Imports the nutrition plan JSON, then generates weekly meal plans using a Meal Planner Agent. Plans can be regenerated weekly, individual meals can be swapped, and a consolidated shopping list is auto-generated.
 
-**Stack:** Django + HTMX (server-rendered, no separate JS build step)
+**Stack:** Django + HTMX + Tailwind CSS (all via CDN, no build step)
+
+**Database:** SQLite for MVP. If deployed, migrate to PostgreSQL — Django's `DATABASE_URL` / `dj-database-url` pattern makes this a config-only change.
 
 ---
 
@@ -138,7 +140,7 @@ status: str                       # "active" | "archived"
 ```python
 meal_plan: FK(MealPlan)
 recipe: FK(Recipe)
-day_of_week: str                  # "Monday" … "Sunday"
+day_offset: int                   # 0=Monday … 6=Sunday; display label derived as week_start_date + timedelta(days=day_offset)
 meal_slot: str                    # "breakfast" | "lunch" | "dinner" | "afternoon_snack" | "night_snack"
 is_optional: bool                 # True for night_snack
 was_swapped: bool
@@ -167,6 +169,10 @@ sodium_mg: FloatField(null=True)
 tags: JSONField                   # ["meal-prep", "heart-healthy", "quick"]
 created_at: datetime
 ```
+
+> **Note (servings):** The meal plan agent is instructed to generate ingredient quantities for exactly 1 serving. Shopping list aggregation treats all quantities as single-serving — `recipe.servings` is display-only in MVP. Future: add `servings_consumed: int` to `PlannedMeal` (defaulting to `recipe.servings`) and scale ingredient quantities accordingly when building the shopping list.
+
+> **Note (deduplication):** Each generation always creates a new `Recipe` row — no deduplication. The same dish generated across multiple weeks will produce duplicate rows. Recipe deduplication (by name, ingredient fingerprint, etc.) is deferred to a future phase.
 
 **Ingredient**
 ```python
@@ -215,11 +221,14 @@ last_updated: datetime
 ### Dietitian Agent (`dietitian_agent.md` — Claude CLI, run separately)
 
 A markdown agent definition file used with `claude --agent dietitian_agent.md`. The agent:
-1. Conducts a conversational intake interview (health goals, restrictions, preferences, cooking style)
-2. At the end produces and saves a `nutrition_plan.json` file in a defined schema
-3. The user then imports that JSON into the web app via `/nutrition/import/`
+1. Asks for the person's name at the start of the interview
+2. Conducts a conversational intake interview (health goals, restrictions, preferences, cooking style)
+3. At the end writes `nutrition_plans/<name>_<YYYY-MM-DD>.json` (e.g. `nutrition_plans/john_2026-04-03.json`) and prints the JSON to the terminal
+4. The user then imports that JSON into the web app via `/nutrition/import/` (paste or file upload)
 
-**Output schema** (`nutrition_plan.json`):
+**`nutrition_plans/` directory** lives at the project root and is gitignored (contains personal health data). Multiple people can run the dietitian agent independently — each plan is namespaced by person and date, so no files are overwritten.
+
+**Output schema** (`nutrition_plans/<name>_<date>.json`):
 ```json
 {
   "label": "My Plan - April 2026",
@@ -299,7 +308,7 @@ POST /pantry/add/               → add item (Phase 2)
 
 ## Frontend (Django Templates + HTMX)
 
-- **`base.html`**: HTMX CDN, basic nav (Nutrition Plan | Meal Plan | Shopping | Pantry)
+- **`base.html`**: HTMX CDN + Tailwind CSS CDN, basic nav (Nutrition Plan | Meal Plan | Shopping | Pantry)
 - **`nutrition/import.html`**: Textarea to paste `nutrition_plan.json`, or file upload. Submit saves to DB.
 - **`nutrition/plan_summary.html`**: Card display of current plan goals, preferences, health flags.
 - **`meals/week_plan.html`**: 7-column grid (one per day), 5 rows (one per meal slot). Each cell shows meal name + calories. Click to see detail. "Swap" button per cell (HTMX POST → replaces cell in-place).
