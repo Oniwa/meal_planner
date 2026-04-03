@@ -1,0 +1,387 @@
+# Meal Planner Web Application
+
+## Context
+
+The user wants a personal nutrition and meal planning web application powered by Claude AI. The pipeline has **two stages**:
+
+1. **Dietitian Stage (Claude CLI)** — The user runs a separate Claude CLI conversation against a markdown agent definition (`dietitian_agent.md`) to figure out their personal nutrition plan. The output is a structured `nutrition_plan.json` file.
+2. **Meal Planner Web App (Django)** — Imports the nutrition plan JSON, then generates weekly meal plans using a Meal Planner Agent. Plans can be regenerated weekly, individual meals can be swapped, and a consolidated shopping list is auto-generated.
+
+**Stack:** Django + HTMX (server-rendered, no separate JS build step)
+
+---
+
+## Architecture Overview
+
+```
+Claude CLI (dietitian_agent.md)
+        │
+  nutrition_plan.json
+        │
+Browser (Django templates + HTMX)
+        │
+Django Views
+        │
+  Meal Planner Agent (Claude API)
+        │
+  MealPlan + Recipes ──► ShoppingList
+```
+
+---
+
+## Django Project Structure
+
+```
+meal_planner/
+├── manage.py
+├── .env                          # ANTHROPIC_API_KEY, SECRET_KEY (gitignored)
+├── .env.example
+├── requirements.txt
+├── dietitian_agent.md            # Claude CLI agent definition (run outside web app)
+├── config/
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── apps/
+│   ├── nutrition/                # NutritionPlan model + import
+│   │   ├── models.py             # NutritionPlan
+│   │   ├── views.py              # Import JSON, view plan, edit plan
+│   │   ├── urls.py
+│   │   └── templates/nutrition/
+│   │       ├── import.html       # Paste/upload nutrition_plan.json
+│   │       └── plan_summary.html # View current plan
+│   ├── meals/                    # Meal plans, recipes, ingredients
+│   │   ├── models.py             # MealPlan, PlannedMeal, Recipe, Ingredient
+│   │   ├── views.py              # Generate plan, show week, swap meal
+│   │   ├── urls.py
+│   │   └── templates/meals/
+│   │       ├── week_plan.html    # Weekly plan grid
+│   │       └── meal_detail.html  # Individual meal detail
+│   ├── shopping/                 # Shopping list
+│   │   ├── models.py             # ShoppingList, ShoppingItem
+│   │   ├── views.py              # Show list, check off items
+│   │   ├── urls.py
+│   │   └── templates/shopping/
+│   │       └── list.html
+│   └── pantry/                   # Phase 2
+│       ├── models.py             # Pantry, PantryItem
+│       ├── views.py
+│       ├── urls.py
+│       └── templates/pantry/
+│           └── pantry.html
+├── ai/
+│   ├── __init__.py
+│   ├── client.py                 # Anthropic client singleton
+│   ├── meal_planner_agent.py     # Build prompt from NutritionPlan, call API, parse JSON
+│   └── prompts/
+│       └── meal_planner.txt      # Meal plan generation prompt template
+└── templates/
+    └── base.html                 # HTMX, base layout, nav
+```
+
+---
+
+## Data Models
+
+### `nutrition` app
+
+**NutritionPlan** (populated by importing `nutrition_plan.json` from Claude CLI)
+```python
+label: str                        # e.g. "My Plan - April 2026"
+created_at: datetime
+is_active: bool                   # only one active at a time
+
+# Calorie & macro targets
+daily_calories: int
+protein_grams: int
+carbs_grams: int
+fat_grams: int
+
+# Health flags
+heart_healthy: bool
+low_sodium: bool
+low_sugar: bool
+diabetic_friendly: bool
+anti_inflammatory: bool
+
+# Dietary restrictions
+is_vegetarian: bool
+is_vegan: bool
+is_gluten_free: bool
+is_dairy_free: bool
+
+# Preferences (stored as JSON fields)
+allergies: JSONField              # list[str]
+disliked_foods: JSONField         # list[str]
+liked_foods: JSONField            # list[str]
+preferred_cuisines: JSONField     # list[str]
+
+# Cooking style
+max_cook_time_minutes: int
+meal_prep_friendly: bool
+cooking_skill_level: str          # "beginner" | "intermediate" | "advanced"
+notes: TextField                  # any extra context captured by dietitian agent
+```
+
+### `meals` app
+
+**MealPlan**
+```python
+nutrition_plan: FK(NutritionPlan)
+week_start_date: DateField        # Monday of the week
+generated_at: datetime
+status: str                       # "active" | "archived"
+```
+
+**PlannedMeal** (one row per day × slot)
+```python
+meal_plan: FK(MealPlan)
+recipe: FK(Recipe)
+day_of_week: str                  # "Monday" … "Sunday"
+meal_slot: str                    # "breakfast" | "lunch" | "dinner" | "afternoon_snack" | "night_snack"
+is_optional: bool                 # True for night_snack
+was_swapped: bool
+swap_reason: TextField(blank=True)
+```
+
+**Recipe**
+```python
+name: str
+description: TextField
+instructions: TextField
+prep_time_minutes: int
+cook_time_minutes: int
+servings: int
+meal_type: str                    # "breakfast" | "lunch" | "dinner" | "snack"
+cuisine_type: str
+
+# Nutrition per serving
+calories: int
+protein_grams: FloatField
+carbs_grams: FloatField
+fat_grams: FloatField
+fiber_grams: FloatField(null=True)
+sodium_mg: FloatField(null=True)
+
+tags: JSONField                   # ["meal-prep", "heart-healthy", "quick"]
+created_at: datetime
+```
+
+**Ingredient**
+```python
+recipe: FK(Recipe)
+name: str
+quantity: FloatField
+unit: str                         # "oz", "cup", "tbsp"
+notes: str(blank=True)
+category: str                     # "protein" | "produce" | "dairy" | "pantry"
+```
+
+### `shopping` app
+
+**ShoppingList**
+```python
+meal_plan: OneToOneField(MealPlan)
+generated_at: datetime
+```
+
+**ShoppingItem**
+```python
+shopping_list: FK(ShoppingList)
+ingredient_name: str
+total_quantity: FloatField
+unit: str
+category: str                     # for grouping (produce, protein, dairy, etc.)
+is_checked: bool
+notes: str(blank=True)
+```
+
+### `pantry` app (Phase 2)
+
+**PantryItem**
+```python
+ingredient_name: str
+quantity: FloatField
+unit: str
+expiry_date: DateField(null=True)
+last_updated: datetime
+```
+
+---
+
+## Agent Design
+
+### Dietitian Agent (`dietitian_agent.md` — Claude CLI, run separately)
+
+A markdown agent definition file used with `claude --agent dietitian_agent.md`. The agent:
+1. Conducts a conversational intake interview (health goals, restrictions, preferences, cooking style)
+2. At the end produces and saves a `nutrition_plan.json` file in a defined schema
+3. The user then imports that JSON into the web app via `/nutrition/import/`
+
+**Output schema** (`nutrition_plan.json`):
+```json
+{
+  "label": "My Plan - April 2026",
+  "daily_calories": 2000,
+  "protein_grams": 150,
+  "carbs_grams": 200,
+  "fat_grams": 65,
+  "heart_healthy": true,
+  "is_gluten_free": false,
+  "allergies": ["peanuts"],
+  "disliked_foods": ["cilantro"],
+  "liked_foods": ["salmon", "quinoa"],
+  "preferred_cuisines": ["Mediterranean"],
+  "max_cook_time_minutes": 45,
+  "meal_prep_friendly": true,
+  "cooking_skill_level": "intermediate",
+  "notes": "..."
+}
+```
+
+### Meal Planner Agent (`ai/meal_planner_agent.py`)
+
+**Input:** `NutritionPlan` instance
+**Output:** Full week JSON → parsed into `MealPlan`, `PlannedMeal`, `Recipe`, `Ingredient` rows
+
+**Prompt strategy:**
+- System role: expert meal prep chef and nutritionist
+- User message: structured JSON of the nutrition plan + request for 7-day plan
+- Demand JSON response with schema defined in prompt
+- Request `daily_nutrition_summary` for validation
+
+**Expected JSON shape:**
+```json
+{
+  "week_plan": {
+    "Monday": {
+      "breakfast": { "name": "...", "calories": 420, "protein_grams": 32, ... "ingredients": [...] },
+      "lunch": { ... },
+      "dinner": { ... },
+      "afternoon_snack": { ... },
+      "night_snack": { ... }
+    }
+  },
+  "daily_nutrition_summary": {
+    "Monday": { "calories": 1980, "protein": 145, "carbs": 198, "fat": 64 }
+  }
+}
+```
+
+**Validation:** Check daily totals are within ±15% of targets. Retry once with a correction message if not.
+
+**Swap method:** `generate_swap(planned_meal, reason=None)` — sends focused single-meal prompt with existing meal excluded, returns new `Recipe`.
+
+---
+
+## Key Views & URLs
+
+```
+GET  /                          → redirect to /nutrition/plan/ or /meals/
+GET  /nutrition/import/         → paste/upload nutrition_plan.json
+POST /nutrition/import/         → parse + save NutritionPlan
+GET  /nutrition/plan/           → view current NutritionPlan summary
+
+POST /meals/generate/           → generate new MealPlan for current week
+GET  /meals/                    → current week plan view
+GET  /meals/<week_start>/       → specific week plan view
+POST /meals/swap/               → swap a specific PlannedMeal (HTMX, returns updated row)
+
+GET  /shopping/                 → shopping list for current week
+POST /shopping/check/           → toggle item checked (HTMX)
+
+GET  /pantry/                   → pantry view (Phase 2)
+POST /pantry/add/               → add item (Phase 2)
+```
+
+---
+
+## Frontend (Django Templates + HTMX)
+
+- **`base.html`**: HTMX CDN, basic nav (Nutrition Plan | Meal Plan | Shopping | Pantry)
+- **`nutrition/import.html`**: Textarea to paste `nutrition_plan.json`, or file upload. Submit saves to DB.
+- **`nutrition/plan_summary.html`**: Card display of current plan goals, preferences, health flags.
+- **`meals/week_plan.html`**: 7-column grid (one per day), 5 rows (one per meal slot). Each cell shows meal name + calories. Click to see detail. "Swap" button per cell (HTMX POST → replaces cell in-place).
+- **`shopping/list.html`**: Grouped by category, checkboxes via HTMX POST. Print-friendly CSS class.
+
+---
+
+## Implementation Phases
+
+### Phase 1 — MVP
+1. Django project setup, apps, models, migrations
+2. `.env` config, Anthropic client singleton
+3. `dietitian_agent.md` — Claude CLI agent definition + nutrition plan JSON schema
+4. Nutrition plan import view (paste JSON → save `NutritionPlan`)
+5. Meal planner agent — prompt, JSON parse, DB persist
+6. Week plan view + generate endpoint
+7. Meal swap (single meal regeneration)
+8. Shopping list generation + view
+
+### Phase 2 — Polish
+- Pantry tracking (models + views)
+- Pantry-aware meal plan prompt (exclude items user already has from shopping list)
+- Historical week plans (browse past plans)
+- Nutrition summary bar (daily totals vs targets, color coded)
+- Export shopping list to plain text / printable page
+
+### Phase 3 — Meal Feedback & Rating
+Track which meals were actually made and how much you liked them. This data feeds back into future meal plan generation.
+
+**Schema additions to `PlannedMeal`:**
+```python
+was_made: bool                    # did you actually cook/eat this meal?
+rating: int | None                # 1 = disliked, 2 = average, 3 = liked
+rating_notes: str(blank=True)     # optional free-text (e.g. "too salty")
+rated_at: datetime | None
+```
+
+**UI:** On the week plan view, each meal cell gets a small "Did you make it?" toggle + 1/2/3 star tap (HTMX POST → updates in place, no page reload).
+
+**How it drives future plans:** When generating a new meal plan, the meal planner prompt includes a summary of rated recipes:
+- Rating 1 meals → added to `disliked_meals` list (avoid repeating)
+- Rating 3 meals → added to `liked_meals` list (repeat occasionally, use as style reference)
+- Unrated or rating 2 → neutral, can appear again
+
+### Phase 4 — Second Brain Integration
+Query the second brain before generating meal plans to incorporate free-form notes and patterns captured over time.
+
+- **Dietitian agent**: query second brain for health/diet context before the intake interview
+- **Meal plan generation**: pull recent meal reflections and liked/disliked patterns into the Claude prompt alongside structured DB ratings
+- **Weekly reflections**: capture a short free-text review each week ("liked the Mediterranean meals, dinners felt too heavy") as a second brain thought
+- **Semantic search**: "what cuisines do we consistently rate 3?" surfaced into future plan prompts
+
+Structured data (ratings, nutrition, ingredients) stays in Django DB. Second brain handles free-form notes and cross-domain context.
+
+### Phase 5 — Multi-user
+Designed for single-user in Phase 1, but built to be easy to extend. Migration path:
+1. Enable `django.contrib.auth` (already included in Django, zero extra packages)
+2. Add `user = FK(User, on_delete=CASCADE)` to `NutritionPlan` and `MealPlan`
+3. Add `login/logout` views + a simple login template
+4. Add `@login_required` to all views, filter all querysets by `request.user`
+5. Each person runs their own `dietitian_agent.md` CLI session and imports their own JSON
+
+No structural changes to recipes, ingredients, or shopping logic needed.
+
+---
+
+## Critical Files
+
+- `dietitian_agent.md` — Claude CLI agent definition; quality of the intake conversation + JSON output schema
+- `ai/prompts/meal_planner.txt` — JSON schema definition + constraints = meal plan quality
+- `ai/meal_planner_agent.py` — JSON parse + validation + retry logic
+- `apps/nutrition/models.py` — NutritionPlan schema feeds every downstream agent call
+- `apps/meals/models.py` — Recipe + Ingredient are central; schema must be stable
+
+---
+
+## Verification
+
+1. `python manage.py migrate` — all tables created clean
+2. Run `claude` with `dietitian_agent.md` → complete intake conversation → `nutrition_plan.json` written
+3. Visit `/nutrition/import/` → paste JSON → NutritionPlan saved, redirected to plan summary
+4. Visit `/meals/` → click "Generate Week Plan" → week grid populated with 7 days × 5 meal slots
+5. Click "Swap" on any meal → cell updates in-place with a new meal suggestion
+6. Visit `/shopping/` → all ingredients consolidated, grouped by category
+7. Check off items → persisted via HTMX POST
