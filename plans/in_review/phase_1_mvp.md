@@ -1,7 +1,7 @@
 # Phase 1 — MVP
 
 > Reference: [Architecture](../reference/meal_planner_architecture.md)
-> Testing: [Testing Strategy](testing_strategy.md)
+> Testing: [Testing Strategy](../reference/testing_strategy.md)
 
 ## Goal
 A working end-to-end flow: import a nutrition plan, generate a weekly meal plan, swap individual meals, view a shopping list. Built TDD — tests written before implementation for each feature layer.
