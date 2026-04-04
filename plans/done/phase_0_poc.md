@@ -8,11 +8,11 @@ Validate the full AI pipeline using Claude CLI only — no Django, no database, 
 ## Pipeline
 
 ```
-claude --agent dietitian_agent.md
+claude --agent agents/dietitian_agent.md
         │
   nutrition_plans/<name>_<date>.json
         │
-claude --agent meal_planner_agent.md
+claude --agent agents/meal_planner_agent.md
         │
   meal_plans/<name>_<date>.json
 ```
@@ -148,6 +148,6 @@ This schema is the source of truth that `ai/meal_planner_agent.py` (Phase 1) wil
 - Both JSON files are clean — no markdown wrapping, no extra text
 
 ## Relationship to Phase 1
-- `dietitian_agent.md` carries forward unchanged into Phase 1
-- `meal_planner_agent.md` becomes the source of truth for the system prompt in `ai/meal_planner_agent.py` — the Python agent loads its instructions from this file rather than duplicating them
+- `agents/dietitian_agent.md` carries forward unchanged into Phase 1
+- `agents/meal_planner_agent.md` becomes the source of truth for the system prompt in `ai/meal_planner_agent.py` — the Python agent loads its instructions from this file rather than duplicating them
 - Both JSON schemas defined here are what Phase 1 imports and persists to the database

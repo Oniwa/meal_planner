@@ -18,18 +18,18 @@ The user wants a personal nutrition and meal planning web application powered by
 ```
 Phase 0 (POC — Claude CLI only)
 ────────────────────────────────────────
-claude --agent dietitian_agent.md
+claude --agent agents/dietitian_agent.md
         │
   nutrition_plans/<name>_<date>.json
         │
-claude --agent meal_planner_agent.md
+claude --agent agents/meal_planner_agent.md
         │
   meal_plans/<name>_<date>.json
 
 
 Phase 1+ (Django web app)
 ────────────────────────────────────────
-Claude CLI (dietitian_agent.md)
+Claude CLI (agents/dietitian_agent.md)
         │
   nutrition_plans/<name>_<date>.json
         │
@@ -38,7 +38,7 @@ Browser (Django templates + HTMX)
 Django Views
         │
   Meal Planner Agent (Claude API)
-  [system prompt sourced from meal_planner_agent.md]
+  [system prompt sourced from agents/meal_planner_agent.md]
         │
   MealPlan + Recipes ──► ShoppingList
 ```
@@ -53,7 +53,9 @@ meal_planner/
 ├── .env                          # ANTHROPIC_API_KEY, SECRET_KEY (gitignored)
 ├── .env.example
 ├── requirements.txt
-├── dietitian_agent.md            # Claude CLI agent definition (run outside web app)
+├── agents/
+│   ├── dietitian_agent.md        # Claude CLI agent — nutrition intake interview
+│   └── meal_planner_agent.md     # Claude CLI agent — weekly meal plan generation
 ├── config/
 │   ├── __init__.py
 │   ├── settings.py
