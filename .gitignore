@@ -28,8 +28,9 @@ media/
 .env.local
 .env.*.local
 
-# Nutrition plans (personal health data)
+# Nutrition and meal plans (personal health data)
 nutrition_plans/
+meal_plans/
 
 # IDE
 .idea/

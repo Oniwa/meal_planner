@@ -16,15 +16,29 @@ The user wants a personal nutrition and meal planning web application powered by
 ## Architecture Overview
 
 ```
+Phase 0 (POC — Claude CLI only)
+────────────────────────────────────────
+claude --agent dietitian_agent.md
+        │
+  nutrition_plans/<name>_<date>.json
+        │
+claude --agent meal_planner_agent.md
+        │
+  meal_plans/<name>_<date>.json
+
+
+Phase 1+ (Django web app)
+────────────────────────────────────────
 Claude CLI (dietitian_agent.md)
         │
-  nutrition_plan.json
+  nutrition_plans/<name>_<date>.json
         │
 Browser (Django templates + HTMX)
         │
 Django Views
         │
   Meal Planner Agent (Claude API)
+  [system prompt sourced from meal_planner_agent.md]
         │
   MealPlan + Recipes ──► ShoppingList
 ```
