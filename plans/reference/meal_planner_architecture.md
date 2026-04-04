@@ -137,6 +137,8 @@ preferred_cuisines: JSONField     # list[str]
 max_cook_time_minutes: int
 meal_prep_friendly: bool
 cooking_skill_level: str          # "beginner" | "intermediate" | "advanced"
+meal_variety: str                 # "high" | "medium" | "low" — drives repetition constraints in meal plan prompt
+include_night_snack: bool         # whether to generate the optional night_snack slot
 notes: TextField                  # any extra context captured by dietitian agent
 ```
 
@@ -245,7 +247,8 @@ A markdown agent definition file used with `claude --agent dietitian_agent.md`. 
 **Output schema** (`nutrition_plans/<name>_<date>.json`):
 ```json
 {
-  "label": "My Plan - April 2026",
+  "name": "john",
+  "label": "John - April 2026",
   "daily_calories": 2000,
   "protein_grams": 150,
   "carbs_grams": 200,
@@ -259,6 +262,8 @@ A markdown agent definition file used with `claude --agent dietitian_agent.md`. 
   "max_cook_time_minutes": 45,
   "meal_prep_friendly": true,
   "cooking_skill_level": "intermediate",
+  "meal_variety": "medium",
+  "include_night_snack": false,
   "notes": "..."
 }
 ```

@@ -3,7 +3,7 @@
 > Reference: [Architecture](../reference/meal_planner_architecture.md)
 
 ## Goal
-Validate the full AI pipeline using Claude CLI only — no Django, no database, no web server. Two markdown agents that talk to each other via JSON files. Phase 1 only begins once the output quality of both agents is satisfactory.
+Validate the full AI pipeline using Claude CLI only — no Django, no database, no web server. Two markdown agents that talk to each other via JSON files. Phase 1 only begins once the output quality of both agents is satisfactory across three test runs.
 
 ## Pipeline
 
@@ -22,18 +22,25 @@ claude --agent meal_planner_agent.md
 ### 1. `dietitian_agent.md`
 A Claude CLI agent that:
 - Asks for the person's name at the start
-- Conducts a conversational intake interview (health goals, dietary restrictions, food preferences, cooking style, activity level)
-- Produces a validated `nutrition_plans/<name>_<YYYY-MM-DD>.json` matching the `NutritionPlan` schema
+- Conducts an **adaptive** conversational intake interview:
+  - Core questions first: goals, dietary restrictions, allergies, cuisine preferences, max cook time, cooking skill, meal variety preference, night snack preference
+  - Branches based on answers (e.g. "heart healthy" → ask about sodium targets; "meal prep friendly" → ask about prep day and batch cooking preferences)
+  - Captures anything the structured fields can't express in the `notes` field
+- Produces `nutrition_plans/<name>_<YYYY-MM-DD>.json` matching the schema below
 - Prints the JSON to the terminal and writes it to the file
 
 ### 2. `meal_planner_agent.md`
 A Claude CLI agent that:
-- Asks which nutrition plan file to load (or defaults to the most recent in `nutrition_plans/`)
-- Reads and parses the nutrition plan JSON
-- Generates a full 7-day × 5-slot meal plan conforming to the plan's constraints
-- Produces `meal_plans/<name>_<YYYY-MM-DD>.json` matching the `MealPlan` JSON schema (see below)
-- Prints a human-readable summary of the week plan to the terminal
-- Writes the full JSON to the file
+- Lists all files in `nutrition_plans/` and asks the user to pick one (most recent pre-selected as default), reading the chosen file directly with the `read` tool
+- Asks which week to plan for (default: upcoming Monday)
+- Generates a full 7-day × 5-slot meal plan (or 4-slot if `include_night_snack: false`) conforming to the nutrition plan's constraints
+- Repetition rules driven by `meal_variety`:
+  - `"high"` — no repeated recipes across the entire week
+  - `"medium"` — no repeated recipes within the same meal slot
+  - `"low"` — repetition allowed (meal prep friendly); agent should suggest batch-cook candidates
+- Prints a compact terminal summary: meal name + calories + macros per slot, daily totals vs targets row
+- Produces `meal_plans/<name>_<YYYY-MM-DD>.json` (generation date) matching the schema below
+- Writes the JSON to the file
 
 ### Output Directories
 Both directories live at the project root and are gitignored (personal health data):
@@ -42,7 +49,39 @@ nutrition_plans/   # output of dietitian_agent.md
 meal_plans/        # output of meal_planner_agent.md
 ```
 
-## `meal_plans/` JSON Schema
+## Nutrition Plan JSON Schema
+
+```json
+{
+  "name": "john",
+  "label": "John - April 2026",
+  "daily_calories": 2000,
+  "protein_grams": 150,
+  "carbs_grams": 200,
+  "fat_grams": 65,
+  "heart_healthy": true,
+  "low_sodium": false,
+  "low_sugar": false,
+  "diabetic_friendly": false,
+  "anti_inflammatory": false,
+  "is_vegetarian": false,
+  "is_vegan": false,
+  "is_gluten_free": false,
+  "is_dairy_free": false,
+  "allergies": ["peanuts"],
+  "disliked_foods": ["cilantro"],
+  "liked_foods": ["salmon", "quinoa"],
+  "preferred_cuisines": ["Mediterranean"],
+  "max_cook_time_minutes": 45,
+  "meal_prep_friendly": true,
+  "cooking_skill_level": "intermediate",
+  "meal_variety": "medium",
+  "include_night_snack": false,
+  "notes": "..."
+}
+```
+
+## Meal Plan JSON Schema
 
 This schema is the source of truth that `ai/meal_planner_agent.py` (Phase 1) will also consume:
 
@@ -73,17 +112,11 @@ This schema is the source of truth that `ai/meal_planner_agent.py` (Phase 1) wil
           { "name": "Greek yogurt", "quantity": 1.0, "unit": "cup", "category": "dairy", "notes": "" }
         ]
       },
-      "lunch": { ... },
-      "dinner": { ... },
-      "afternoon_snack": { ... },
-      "night_snack": { ... }
-    },
-    "1": { ... },
-    "2": { ... },
-    "3": { ... },
-    "4": { ... },
-    "5": { ... },
-    "6": { ... }
+      "lunch": { },
+      "dinner": { },
+      "afternoon_snack": { },
+      "night_snack": { }
+    }
   },
   "daily_nutrition_summary": {
     "0": { "calories": 1980, "protein_grams": 145.0, "carbs_grams": 198.0, "fat_grams": 64.0 }
@@ -91,27 +124,30 @@ This schema is the source of truth that `ai/meal_planner_agent.py` (Phase 1) wil
 }
 ```
 
-> **Note:** Days are keyed by `day_offset` integer (0=Monday … 6=Sunday) to match the `PlannedMeal.day_offset` field in Phase 1. `week_start_date` is always the Monday of the target week.
+> **Note:** Days are keyed by `day_offset` integer (0=Monday … 6=Sunday). `night_snack` is omitted from all days when `include_night_snack: false`. `week_start_date` is always the Monday of the target week. Filename uses generation date, not week start date.
 
 ## Tasks
 
 - [ ] Create `nutrition_plans/` and `meal_plans/` directories at project root
-- [ ] Add both to `.gitignore`
-- [ ] Write `dietitian_agent.md`
-- [ ] Test: run dietitian agent, complete intake, verify `nutrition_plans/<name>_<date>.json` is written and valid
-- [ ] Write `meal_planner_agent.md`
-- [ ] Test: run meal planner agent against the nutrition plan, verify `meal_plans/<name>_<date>.json` is written
-- [ ] Manually review meal plan output: check meals respect dietary restrictions, macros are plausible, variety across the week
-- [ ] Iterate on both agent prompts until output quality is satisfactory
+- [ ] Confirm both are in `.gitignore`
+- [ ] Write `dietitian_agent.md` (adaptive intake, all schema fields captured)
+- [ ] Test run 1 — **standard profile**: run dietitian agent, complete intake, verify JSON written and valid; run meal planner agent, verify meal plan JSON written; review output for constraint compliance and plausible macros
+- [ ] Write `meal_planner_agent.md` (file picker, week picker, variety rules, compact terminal summary)
+- [ ] Test run 2 — **restrictive profile**: vegan + gluten-free + low-sodium, `meal_variety: "high"`; verify no restriction violations, no repeated meals, macros within ±15%
+- [ ] Test run 3 — **meal prep profile**: `meal_prep_friendly: true`, `meal_variety: "low"`, `include_night_snack: true`; verify batch-cook suggestions, night snack slot present, shopping list mentally coherent
+- [ ] Iterate on both agent prompts until all three test runs pass acceptance criteria
 
 ## Acceptance Criteria
-- `nutrition_plans/<name>_<date>.json` produced by dietitian agent passes the `NutritionPlan` schema (all required fields present, correct types)
-- `meal_plans/<name>_<date>.json` produced by meal planner agent passes the meal plan schema above
+- `nutrition_plans/<name>_<date>.json` contains all required fields with correct types
+- `meal_plans/<name>_<date>.json` matches the meal plan schema above
 - Daily nutrition summaries are within ±15% of the plan's targets
-- Meal variety is acceptable across 7 days (no repeated meals, cuisine mix matches preferences)
-- Both JSON files can be read cleanly by a human and a script — no markdown wrapping, no extra text
+- Meal variety rules are respected per `meal_variety` setting
+- Dietary restrictions and allergies are not violated
+- `night_snack` slot present iff `include_night_snack: true`
+- Terminal summary shows name + calories + macros per slot, daily totals vs targets
+- Both JSON files are clean — no markdown wrapping, no extra text
 
 ## Relationship to Phase 1
 - `dietitian_agent.md` carries forward unchanged into Phase 1
 - `meal_planner_agent.md` becomes the source of truth for the system prompt in `ai/meal_planner_agent.py` — the Python agent loads its instructions from this file rather than duplicating them
-- The `meal_plans/` JSON schema defined here is what `ai/meal_planner_agent.py` parses and persists to the database
+- Both JSON schemas defined here are what Phase 1 imports and persists to the database
