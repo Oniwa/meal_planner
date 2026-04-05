@@ -49,3 +49,6 @@ htmlcov/
 
 # Static files collected by collectstatic
 staticfiles/
+
+# Claude Code worktrees
+.claude/worktrees/
