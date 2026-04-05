@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}{{ recipe.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+  <a href="{% url 'meals_current' %}" class="text-green-600 hover:underline text-sm mb-4 inline-block">
+    &larr; Back to Week Plan
+  </a>
+
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <div class="flex items-start justify-between mb-4">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">{{ recipe.name }}</h1>
+        {% if recipe.cuisine_type %}
+          <span class="text-sm text-gray-500 capitalize">{{ recipe.cuisine_type }}</span>
+        {% endif %}
+      </div>
+      <div class="text-right">
+        <div class="text-sm text-gray-500 capitalize">{{ pm.meal_slot|cut:"_" }}</div>
+        {% if pm.was_swapped %}
+          <span class="text-xs text-orange-500">Swapped</span>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if recipe.description %}
+      <p class="text-gray-600 mb-4">{{ recipe.description }}</p>
+    {% endif %}
+
+    <!-- Nutrition -->
+    <div class="grid grid-cols-4 gap-3 mb-6 p-4 bg-gray-50 rounded-lg">
+      <div class="text-center">
+        <div class="text-xl font-bold text-green-600">{{ recipe.calories }}</div>
+        <div class="text-xs text-gray-500">Calories</div>
+      </div>
+      <div class="text-center">
+        <div class="text-xl font-bold text-blue-600">{{ recipe.protein_grams|floatformat:1 }}g</div>
+        <div class="text-xs text-gray-500">Protein</div>
+      </div>
+      <div class="text-center">
+        <div class="text-xl font-bold text-yellow-600">{{ recipe.carbs_grams|floatformat:1 }}g</div>
+        <div class="text-xs text-gray-500">Carbs</div>
+      </div>
+      <div class="text-center">
+        <div class="text-xl font-bold text-red-600">{{ recipe.fat_grams|floatformat:1 }}g</div>
+        <div class="text-xs text-gray-500">Fat</div>
+      </div>
+    </div>
+
+    <!-- Time & Tags -->
+    <div class="flex flex-wrap gap-4 mb-6 text-sm text-gray-600">
+      {% if recipe.prep_time_minutes %}
+        <span>Prep: {{ recipe.prep_time_minutes }} min</span>
+      {% endif %}
+      {% if recipe.cook_time_minutes %}
+        <span>Cook: {{ recipe.cook_time_minutes }} min</span>
+      {% endif %}
+      {% if recipe.fiber_grams %}
+        <span>Fiber: {{ recipe.fiber_grams|floatformat:1 }}g</span>
+      {% endif %}
+      {% if recipe.sodium_mg %}
+        <span>Sodium: {{ recipe.sodium_mg|floatformat:0 }}mg</span>
+      {% endif %}
+    </div>
+
+    {% if recipe.tags %}
+      <div class="flex flex-wrap gap-2 mb-6">
+        {% for tag in recipe.tags %}
+          <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">{{ tag }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Ingredients -->
+    <div class="mb-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-3">Ingredients</h2>
+      <ul class="space-y-1">
+        {% for ingredient in ingredients %}
+          <li class="flex items-start text-sm text-gray-700">
+            <span class="mr-2 text-gray-400">&#8226;</span>
+            <span>
+              {{ ingredient.quantity|floatformat:2 }} {{ ingredient.unit }} {{ ingredient.name }}
+              {% if ingredient.notes %}
+                <span class="text-gray-400">({{ ingredient.notes }})</span>
+              {% endif %}
+            </span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Instructions -->
+    {% if recipe.instructions %}
+      <div>
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">Instructions</h2>
+        <p class="text-gray-700 whitespace-pre-wrap">{{ recipe.instructions }}</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="flex gap-3">
+    <form method="post" action="{% url 'meals_swap' %}">
+      {% csrf_token %}
+      <input type="hidden" name="planned_meal_id" value="{{ pm.id }}">
+      <button type="submit" class="bg-orange-500 text-white py-2 px-4 rounded-md font-medium hover:bg-orange-600">
+        Swap This Meal
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

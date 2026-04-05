@@ -1,0 +1,9 @@
+pytest
+pytest-django
+pytest-mock
+model-bakery
+playwright
+pytest-playwright
+ruff
+pylint
+pylint-django

@@ -1,0 +1,101 @@
+{
+  "week_plan": {
+    "0": {
+      "breakfast": {
+        "name": "Tiny Breakfast",
+        "description": "A very small breakfast.",
+        "instructions": "Eat it.",
+        "prep_time_minutes": 1,
+        "cook_time_minutes": 0,
+        "servings": 1,
+        "meal_type": "breakfast",
+        "cuisine_type": "American",
+        "calories": 50,
+        "protein_grams": 2.0,
+        "carbs_grams": 8.0,
+        "fat_grams": 1.0,
+        "fiber_grams": 0.0,
+        "sodium_mg": 10.0,
+        "tags": [],
+        "ingredients": [
+          {"name": "celery stick", "quantity": 1.0, "unit": "piece", "category": "produce", "notes": ""}
+        ]
+      },
+      "lunch": {
+        "name": "Tiny Lunch",
+        "description": "A very small lunch.",
+        "instructions": "Eat it.",
+        "prep_time_minutes": 1,
+        "cook_time_minutes": 0,
+        "servings": 1,
+        "meal_type": "lunch",
+        "cuisine_type": "American",
+        "calories": 50,
+        "protein_grams": 2.0,
+        "carbs_grams": 8.0,
+        "fat_grams": 1.0,
+        "fiber_grams": 0.0,
+        "sodium_mg": 10.0,
+        "tags": [],
+        "ingredients": [
+          {"name": "lettuce leaf", "quantity": 1.0, "unit": "piece", "category": "produce", "notes": ""}
+        ]
+      },
+      "dinner": {
+        "name": "Tiny Dinner",
+        "description": "A very small dinner.",
+        "instructions": "Eat it.",
+        "prep_time_minutes": 1,
+        "cook_time_minutes": 0,
+        "servings": 1,
+        "meal_type": "dinner",
+        "cuisine_type": "American",
+        "calories": 50,
+        "protein_grams": 2.0,
+        "carbs_grams": 8.0,
+        "fat_grams": 1.0,
+        "fiber_grams": 0.0,
+        "sodium_mg": 10.0,
+        "tags": [],
+        "ingredients": [
+          {"name": "tomato slice", "quantity": 1.0, "unit": "piece", "category": "produce", "notes": ""}
+        ]
+      },
+      "afternoon_snack": {
+        "name": "Tiny Snack",
+        "description": "A very small snack.",
+        "instructions": "Eat it.",
+        "prep_time_minutes": 1,
+        "cook_time_minutes": 0,
+        "servings": 1,
+        "meal_type": "snack",
+        "cuisine_type": "American",
+        "calories": 10,
+        "protein_grams": 0.5,
+        "carbs_grams": 2.0,
+        "fat_grams": 0.1,
+        "fiber_grams": 0.0,
+        "sodium_mg": 5.0,
+        "tags": [],
+        "ingredients": [
+          {"name": "water", "quantity": 1.0, "unit": "cup", "category": "pantry", "notes": ""}
+        ]
+      }
+    },
+    "1": {"breakfast": {"name": "B1", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "breakfast", "cuisine_type": "", "calories": 400, "protein_grams": 30.0, "carbs_grams": 50.0, "fat_grams": 10.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "lunch": {"name": "L1", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "lunch", "cuisine_type": "", "calories": 500, "protein_grams": 40.0, "carbs_grams": 60.0, "fat_grams": 12.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "dinner": {"name": "D1", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "dinner", "cuisine_type": "", "calories": 600, "protein_grams": 50.0, "carbs_grams": 70.0, "fat_grams": 20.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "afternoon_snack": {"name": "S1", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "snack", "cuisine_type": "", "calories": 300, "protein_grams": 20.0, "carbs_grams": 30.0, "fat_grams": 10.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}},
+    "2": {"breakfast": {"name": "B2", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "breakfast", "cuisine_type": "", "calories": 400, "protein_grams": 30.0, "carbs_grams": 50.0, "fat_grams": 10.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "lunch": {"name": "L2", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "lunch", "cuisine_type": "", "calories": 500, "protein_grams": 40.0, "carbs_grams": 60.0, "fat_grams": 12.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "dinner": {"name": "D2", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "dinner", "cuisine_type": "", "calories": 600, "protein_grams": 50.0, "carbs_grams": 70.0, "fat_grams": 20.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "afternoon_snack": {"name": "S2", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "snack", "cuisine_type": "", "calories": 300, "protein_grams": 20.0, "carbs_grams": 30.0, "fat_grams": 10.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}},
+    "3": {"breakfast": {"name": "B3", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "breakfast", "cuisine_type": "", "calories": 400, "protein_grams": 30.0, "carbs_grams": 50.0, "fat_grams": 10.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "lunch": {"name": "L3", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "lunch", "cuisine_type": "", "calories": 500, "protein_grams": 40.0, "carbs_grams": 60.0, "fat_grams": 12.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "dinner": {"name": "D3", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "dinner", "cuisine_type": "", "calories": 600, "protein_grams": 50.0, "carbs_grams": 70.0, "fat_grams": 20.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "afternoon_snack": {"name": "S3", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "snack", "cuisine_type": "", "calories": 300, "protein_grams": 20.0, "carbs_grams": 30.0, "fat_grams": 10.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}},
+    "4": {"breakfast": {"name": "B4", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "breakfast", "cuisine_type": "", "calories": 400, "protein_grams": 30.0, "carbs_grams": 50.0, "fat_grams": 10.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "lunch": {"name": "L4", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "lunch", "cuisine_type": "", "calories": 500, "protein_grams": 40.0, "carbs_grams": 60.0, "fat_grams": 12.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "dinner": {"name": "D4", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "dinner", "cuisine_type": "", "calories": 600, "protein_grams": 50.0, "carbs_grams": 70.0, "fat_grams": 20.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "afternoon_snack": {"name": "S4", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "snack", "cuisine_type": "", "calories": 300, "protein_grams": 20.0, "carbs_grams": 30.0, "fat_grams": 10.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}},
+    "5": {"breakfast": {"name": "B5", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "breakfast", "cuisine_type": "", "calories": 400, "protein_grams": 30.0, "carbs_grams": 50.0, "fat_grams": 10.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "lunch": {"name": "L5", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "lunch", "cuisine_type": "", "calories": 500, "protein_grams": 40.0, "carbs_grams": 60.0, "fat_grams": 12.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "dinner": {"name": "D5", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "dinner", "cuisine_type": "", "calories": 600, "protein_grams": 50.0, "carbs_grams": 70.0, "fat_grams": 20.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "afternoon_snack": {"name": "S5", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "snack", "cuisine_type": "", "calories": 300, "protein_grams": 20.0, "carbs_grams": 30.0, "fat_grams": 10.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}},
+    "6": {"breakfast": {"name": "B6", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "breakfast", "cuisine_type": "", "calories": 400, "protein_grams": 30.0, "carbs_grams": 50.0, "fat_grams": 10.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "lunch": {"name": "L6", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "lunch", "cuisine_type": "", "calories": 500, "protein_grams": 40.0, "carbs_grams": 60.0, "fat_grams": 12.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "dinner": {"name": "D6", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "dinner", "cuisine_type": "", "calories": 600, "protein_grams": 50.0, "carbs_grams": 70.0, "fat_grams": 20.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}, "afternoon_snack": {"name": "S6", "description": "", "instructions": "", "prep_time_minutes": 0, "cook_time_minutes": 0, "servings": 1, "meal_type": "snack", "cuisine_type": "", "calories": 300, "protein_grams": 20.0, "carbs_grams": 30.0, "fat_grams": 10.0, "fiber_grams": 0.0, "sodium_mg": 0.0, "tags": [], "ingredients": []}}
+  },
+  "daily_nutrition_summary": {
+    "0": {"calories": 160, "protein_grams": 6.5, "carbs_grams": 26.0, "fat_grams": 3.1},
+    "1": {"calories": 1800, "protein_grams": 140.0, "carbs_grams": 210.0, "fat_grams": 52.0},
+    "2": {"calories": 1800, "protein_grams": 140.0, "carbs_grams": 210.0, "fat_grams": 52.0},
+    "3": {"calories": 1800, "protein_grams": 140.0, "carbs_grams": 210.0, "fat_grams": 52.0},
+    "4": {"calories": 1800, "protein_grams": 140.0, "carbs_grams": 210.0, "fat_grams": 52.0},
+    "5": {"calories": 1800, "protein_grams": 140.0, "carbs_grams": 210.0, "fat_grams": 52.0},
+    "6": {"calories": 1800, "protein_grams": 140.0, "carbs_grams": 210.0, "fat_grams": 52.0}
+  }
+}

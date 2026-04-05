@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load meal_tags %}
+
+{% block title %}Week Plan{% endblock %}
+
+{% block content %}
+<div class="max-w-full">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">
+      Week of {{ week_start }}
+    </h1>
+    <form method="post" action="{% url 'meals_generate' %}" id="generate-form">
+      {% csrf_token %}
+      <button
+        type="submit"
+        class="bg-green-600 text-white py-2 px-6 rounded-md font-medium hover:bg-green-700"
+        hx-post="{% url 'meals_generate' %}"
+        hx-target="#generate-form"
+        hx-swap="outerHTML"
+        hx-indicator="#generate-indicator"
+        id="generate-btn"
+      >
+        {% if meal_plan %}Regenerate Week Plan{% else %}Generate Week Plan{% endif %}
+      </button>
+      <span id="generate-indicator" class="htmx-indicator ml-2 text-gray-500">
+        Generating... (this may take up to 2 minutes)
+      </span>
+    </form>
+  </div>
+
+  {% if error %}
+    <div class="mb-4 p-4 bg-red-100 border border-red-300 rounded-lg text-red-800">
+      <strong>Error:</strong> {{ error }}
+    </div>
+  {% endif %}
+
+  {% if not meal_plan %}
+    <div class="bg-white shadow rounded-lg p-8 text-center">
+      <p class="text-gray-500 text-lg">No meal plan for this week yet.</p>
+      <p class="text-gray-400 mt-2">Click "Generate Week Plan" to create one.</p>
+    </div>
+  {% else %}
+    <!-- Day names header -->
+    {% with day_names="Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday" %}
+    <div class="overflow-x-auto">
+      <table class="w-full table-fixed border-collapse">
+        <thead>
+          <tr>
+            <th class="w-28 py-2 text-left text-sm font-semibold text-gray-600 border-b border-gray-200">Slot</th>
+            {% for day in days %}
+              <th class="py-2 px-2 text-center text-sm font-semibold text-gray-600 border-b border-gray-200">
+                <div>{{ day.date|date:"D" }}</div>
+                <div class="text-xs text-gray-400">{{ day.date|date:"M j" }}</div>
+              </th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-gray-100">
+            <td class="py-3 pr-2 text-sm font-medium text-gray-500">Breakfast</td>
+            {% for day in days %}
+              <td class="py-2 px-1">
+                {% with pm=day.slots|get_item:"breakfast" %}
+                  {% if pm %}{% include "meals/partials/meal_cell.html" with pm=pm %}{% else %}
+                  <div class="bg-gray-50 rounded-lg p-3 h-20 flex items-center justify-center text-xs text-gray-300">—</div>
+                  {% endif %}
+                {% endwith %}
+              </td>
+            {% endfor %}
+          </tr>
+          <tr class="border-b border-gray-100">
+            <td class="py-3 pr-2 text-sm font-medium text-gray-500">Lunch</td>
+            {% for day in days %}
+              <td class="py-2 px-1">
+                {% with pm=day.slots|get_item:"lunch" %}
+                  {% if pm %}{% include "meals/partials/meal_cell.html" with pm=pm %}{% else %}
+                  <div class="bg-gray-50 rounded-lg p-3 h-20 flex items-center justify-center text-xs text-gray-300">—</div>
+                  {% endif %}
+                {% endwith %}
+              </td>
+            {% endfor %}
+          </tr>
+          <tr class="border-b border-gray-100">
+            <td class="py-3 pr-2 text-sm font-medium text-gray-500">Dinner</td>
+            {% for day in days %}
+              <td class="py-2 px-1">
+                {% with pm=day.slots|get_item:"dinner" %}
+                  {% if pm %}{% include "meals/partials/meal_cell.html" with pm=pm %}{% else %}
+                  <div class="bg-gray-50 rounded-lg p-3 h-20 flex items-center justify-center text-xs text-gray-300">—</div>
+                  {% endif %}
+                {% endwith %}
+              </td>
+            {% endfor %}
+          </tr>
+          <tr class="border-b border-gray-100">
+            <td class="py-3 pr-2 text-sm font-medium text-gray-500">Afternoon Snack</td>
+            {% for day in days %}
+              <td class="py-2 px-1">
+                {% with pm=day.slots|get_item:"afternoon_snack" %}
+                  {% if pm %}{% include "meals/partials/meal_cell.html" with pm=pm %}{% else %}
+                  <div class="bg-gray-50 rounded-lg p-3 h-20 flex items-center justify-center text-xs text-gray-300">—</div>
+                  {% endif %}
+                {% endwith %}
+              </td>
+            {% endfor %}
+          </tr>
+
+          {% if nutrition_plan.include_night_snack %}
+          <tr class="border-b border-gray-100">
+            <td class="py-3 pr-2 text-sm font-medium text-gray-500">Night Snack</td>
+            {% for day in days %}
+              <td class="py-2 px-1">
+                {% with pm=day.slots|get_item:"night_snack" %}
+                  {% if pm %}{% include "meals/partials/meal_cell.html" with pm=pm %}{% else %}
+                  <div class="bg-gray-50 rounded-lg p-3 h-20 flex items-center justify-center text-xs text-gray-300">—</div>
+                  {% endif %}
+                {% endwith %}
+              </td>
+            {% endfor %}
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+    {% endwith %}
+
+    <div class="mt-4 text-right">
+      <a href="{% url 'shopping_list' %}" class="text-green-600 hover:underline font-medium">
+        View Shopping List
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

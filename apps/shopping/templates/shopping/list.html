@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping List{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">Shopping List</h1>
+    {% if meal_plan %}
+      <span class="text-sm text-gray-500">Week of {{ meal_plan.week_start_date }}</span>
+    {% endif %}
+  </div>
+
+  {% if not meal_plan %}
+    <div class="bg-white shadow rounded-lg p-8 text-center">
+      <p class="text-gray-500">No active meal plan. <a href="{% url 'meals_current' %}" class="text-green-600 hover:underline">Generate a meal plan first.</a></p>
+    </div>
+  {% elif not items_by_category %}
+    <div class="bg-white shadow rounded-lg p-8 text-center">
+      <p class="text-gray-500">Shopping list is empty.</p>
+    </div>
+  {% else %}
+    {% for category, items in items_by_category.items %}
+      <div class="bg-white shadow rounded-lg mb-4 overflow-hidden">
+        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+          <h2 class="text-base font-semibold text-gray-700 capitalize">{{ category }}</h2>
+        </div>
+        <table class="w-full">
+          <tbody>
+            {% for item in items %}
+              {% include "shopping/partials/item_row.html" with item=item %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endfor %}
+
+    <div class="mt-6 text-sm text-gray-400 text-center">
+      Click an item to toggle it as checked.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

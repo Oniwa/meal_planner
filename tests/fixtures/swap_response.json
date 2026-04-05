@@ -1,0 +1,22 @@
+{
+  "name": "Tofu Scramble",
+  "description": "Seasoned tofu scrambled with vegetables.",
+  "instructions": "Crumble tofu. Saute with vegetables and turmeric. Season to taste.",
+  "prep_time_minutes": 5,
+  "cook_time_minutes": 10,
+  "servings": 1,
+  "meal_type": "breakfast",
+  "cuisine_type": "American",
+  "calories": 380,
+  "protein_grams": 28.0,
+  "carbs_grams": 20.0,
+  "fat_grams": 18.0,
+  "fiber_grams": 4.0,
+  "sodium_mg": 300.0,
+  "tags": ["quick", "vegan"],
+  "ingredients": [
+    {"name": "firm tofu", "quantity": 6.0, "unit": "oz", "category": "protein", "notes": ""},
+    {"name": "bell pepper", "quantity": 0.5, "unit": "cup", "category": "produce", "notes": "diced"},
+    {"name": "turmeric", "quantity": 0.5, "unit": "tsp", "category": "pantry", "notes": ""}
+  ]
+}

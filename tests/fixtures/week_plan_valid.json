@@ -1,0 +1,635 @@
+{
+  "week_plan": {
+    "0": {
+      "breakfast": {
+        "name": "Greek Yogurt Parfait",
+        "description": "Creamy Greek yogurt layered with granola and fresh berries.",
+        "instructions": "Layer yogurt, granola, and berries in a bowl.",
+        "prep_time_minutes": 5,
+        "cook_time_minutes": 0,
+        "servings": 1,
+        "meal_type": "breakfast",
+        "cuisine_type": "American",
+        "calories": 420,
+        "protein_grams": 32.0,
+        "carbs_grams": 45.0,
+        "fat_grams": 10.0,
+        "fiber_grams": 4.0,
+        "sodium_mg": 120.0,
+        "tags": ["quick", "no-cook"],
+        "ingredients": [
+          {"name": "greek yogurt", "quantity": 1.0, "unit": "cup", "category": "dairy", "notes": ""},
+          {"name": "granola", "quantity": 0.25, "unit": "cup", "category": "pantry", "notes": "low-sugar"},
+          {"name": "mixed berries", "quantity": 0.5, "unit": "cup", "category": "produce", "notes": ""}
+        ]
+      },
+      "lunch": {
+        "name": "Chicken Quinoa Bowl",
+        "description": "Grilled chicken over quinoa with vegetables.",
+        "instructions": "Cook quinoa, grill chicken, assemble bowl.",
+        "prep_time_minutes": 10,
+        "cook_time_minutes": 20,
+        "servings": 1,
+        "meal_type": "lunch",
+        "cuisine_type": "American",
+        "calories": 550,
+        "protein_grams": 45.0,
+        "carbs_grams": 55.0,
+        "fat_grams": 12.0,
+        "fiber_grams": 6.0,
+        "sodium_mg": 400.0,
+        "tags": ["meal-prep"],
+        "ingredients": [
+          {"name": "chicken breast", "quantity": 6.0, "unit": "oz", "category": "protein", "notes": ""},
+          {"name": "quinoa", "quantity": 0.5, "unit": "cup", "category": "grain", "notes": ""},
+          {"name": "spinach", "quantity": 1.0, "unit": "cup", "category": "produce", "notes": ""}
+        ]
+      },
+      "dinner": {
+        "name": "Salmon with Roasted Vegetables",
+        "description": "Baked salmon fillet with seasonal roasted vegetables.",
+        "instructions": "Preheat oven to 400F. Season salmon. Roast veggies 20 min. Bake salmon 15 min.",
+        "prep_time_minutes": 10,
+        "cook_time_minutes": 25,
+        "servings": 1,
+        "meal_type": "dinner",
+        "cuisine_type": "American",
+        "calories": 520,
+        "protein_grams": 42.0,
+        "carbs_grams": 30.0,
+        "fat_grams": 22.0,
+        "fiber_grams": 5.0,
+        "sodium_mg": 350.0,
+        "tags": ["heart-healthy"],
+        "ingredients": [
+          {"name": "salmon fillet", "quantity": 6.0, "unit": "oz", "category": "protein", "notes": ""},
+          {"name": "broccoli", "quantity": 1.0, "unit": "cup", "category": "produce", "notes": ""},
+          {"name": "olive oil", "quantity": 1.0, "unit": "tbsp", "category": "fat", "notes": ""}
+        ]
+      },
+      "afternoon_snack": {
+        "name": "Apple with Almond Butter",
+        "description": "Sliced apple with almond butter.",
+        "instructions": "Slice apple and serve with almond butter.",
+        "prep_time_minutes": 2,
+        "cook_time_minutes": 0,
+        "servings": 1,
+        "meal_type": "snack",
+        "cuisine_type": "American",
+        "calories": 250,
+        "protein_grams": 5.0,
+        "carbs_grams": 35.0,
+        "fat_grams": 12.0,
+        "fiber_grams": 5.0,
+        "sodium_mg": 50.0,
+        "tags": ["quick"],
+        "ingredients": [
+          {"name": "apple", "quantity": 1.0, "unit": "medium", "category": "produce", "notes": ""},
+          {"name": "almond butter", "quantity": 2.0, "unit": "tbsp", "category": "pantry", "notes": ""}
+        ]
+      }
+    },
+    "1": {
+      "breakfast": {
+        "name": "Oatmeal with Banana",
+        "description": "Warm oatmeal topped with sliced banana and honey.",
+        "instructions": "Cook oats with water. Top with banana and honey.",
+        "prep_time_minutes": 2,
+        "cook_time_minutes": 5,
+        "servings": 1,
+        "meal_type": "breakfast",
+        "cuisine_type": "American",
+        "calories": 380,
+        "protein_grams": 12.0,
+        "carbs_grams": 70.0,
+        "fat_grams": 6.0,
+        "fiber_grams": 7.0,
+        "sodium_mg": 100.0,
+        "tags": ["quick"],
+        "ingredients": [
+          {"name": "rolled oats", "quantity": 0.5, "unit": "cup", "category": "grain", "notes": ""},
+          {"name": "banana", "quantity": 1.0, "unit": "medium", "category": "produce", "notes": ""},
+          {"name": "honey", "quantity": 1.0, "unit": "tbsp", "category": "pantry", "notes": ""}
+        ]
+      },
+      "lunch": {
+        "name": "Turkey Wrap",
+        "description": "Whole wheat wrap with turkey and vegetables.",
+        "instructions": "Layer turkey and veggies in wrap. Roll tightly.",
+        "prep_time_minutes": 5,
+        "cook_time_minutes": 0,
+        "servings": 1,
+        "meal_type": "lunch",
+        "cuisine_type": "American",
+        "calories": 480,
+        "protein_grams": 38.0,
+        "carbs_grams": 48.0,
+        "fat_grams": 14.0,
+        "fiber_grams": 4.0,
+        "sodium_mg": 600.0,
+        "tags": ["quick"],
+        "ingredients": [
+          {"name": "whole wheat tortilla", "quantity": 1.0, "unit": "large", "category": "grain", "notes": ""},
+          {"name": "turkey breast", "quantity": 4.0, "unit": "oz", "category": "protein", "notes": ""},
+          {"name": "lettuce", "quantity": 0.5, "unit": "cup", "category": "produce", "notes": ""}
+        ]
+      },
+      "dinner": {
+        "name": "Beef Stir Fry",
+        "description": "Lean beef stir fried with mixed vegetables.",
+        "instructions": "Slice beef. Stir fry with vegetables and sauce.",
+        "prep_time_minutes": 10,
+        "cook_time_minutes": 15,
+        "servings": 1,
+        "meal_type": "dinner",
+        "cuisine_type": "Asian",
+        "calories": 520,
+        "protein_grams": 40.0,
+        "carbs_grams": 40.0,
+        "fat_grams": 18.0,
+        "fiber_grams": 4.0,
+        "sodium_mg": 550.0,
+        "tags": ["quick"],
+        "ingredients": [
+          {"name": "lean beef", "quantity": 5.0, "unit": "oz", "category": "protein", "notes": ""},
+          {"name": "mixed vegetables", "quantity": 2.0, "unit": "cup", "category": "produce", "notes": ""},
+          {"name": "soy sauce", "quantity": 2.0, "unit": "tbsp", "category": "pantry", "notes": "low-sodium"}
+        ]
+      },
+      "afternoon_snack": {
+        "name": "Cottage Cheese and Pineapple",
+        "description": "Cottage cheese topped with pineapple chunks.",
+        "instructions": "Top cottage cheese with pineapple.",
+        "prep_time_minutes": 2,
+        "cook_time_minutes": 0,
+        "servings": 1,
+        "meal_type": "snack",
+        "cuisine_type": "American",
+        "calories": 210,
+        "protein_grams": 20.0,
+        "carbs_grams": 22.0,
+        "fat_grams": 4.0,
+        "fiber_grams": 1.0,
+        "sodium_mg": 300.0,
+        "tags": ["quick"],
+        "ingredients": [
+          {"name": "cottage cheese", "quantity": 0.5, "unit": "cup", "category": "dairy", "notes": ""},
+          {"name": "pineapple", "quantity": 0.5, "unit": "cup", "category": "produce", "notes": ""}
+        ]
+      }
+    },
+    "2": {
+      "breakfast": {
+        "name": "Scrambled Eggs with Vegetables",
+        "description": "Fluffy scrambled eggs with sauteed vegetables.",
+        "instructions": "Saute vegetables, add beaten eggs, scramble.",
+        "prep_time_minutes": 5,
+        "cook_time_minutes": 10,
+        "servings": 1,
+        "meal_type": "breakfast",
+        "cuisine_type": "American",
+        "calories": 350,
+        "protein_grams": 25.0,
+        "carbs_grams": 15.0,
+        "fat_grams": 20.0,
+        "fiber_grams": 3.0,
+        "sodium_mg": 250.0,
+        "tags": ["quick"],
+        "ingredients": [
+          {"name": "eggs", "quantity": 3.0, "unit": "large", "category": "protein", "notes": ""},
+          {"name": "bell pepper", "quantity": 0.5, "unit": "cup", "category": "produce", "notes": ""},
+          {"name": "onion", "quantity": 0.25, "unit": "cup", "category": "produce", "notes": ""}
+        ]
+      },
+      "lunch": {
+        "name": "Lentil Soup",
+        "description": "Hearty lentil soup with vegetables.",
+        "instructions": "Simmer lentils with vegetables and spices.",
+        "prep_time_minutes": 10,
+        "cook_time_minutes": 30,
+        "servings": 1,
+        "meal_type": "lunch",
+        "cuisine_type": "Mediterranean",
+        "calories": 420,
+        "protein_grams": 22.0,
+        "carbs_grams": 65.0,
+        "fat_grams": 6.0,
+        "fiber_grams": 16.0,
+        "sodium_mg": 400.0,
+        "tags": ["meal-prep"],
+        "ingredients": [
+          {"name": "lentils", "quantity": 0.5, "unit": "cup", "category": "protein", "notes": ""},
+          {"name": "carrots", "quantity": 0.5, "unit": "cup", "category": "produce", "notes": ""},
+          {"name": "celery", "quantity": 0.5, "unit": "cup", "category": "produce", "notes": ""}
+        ]
+      },
+      "dinner": {
+        "name": "Grilled Chicken Salad",
+        "description": "Grilled chicken over mixed greens with vinaigrette.",
+        "instructions": "Grill chicken. Toss greens with dressing. Top with chicken.",
+        "prep_time_minutes": 10,
+        "cook_time_minutes": 15,
+        "servings": 1,
+        "meal_type": "dinner",
+        "cuisine_type": "American",
+        "calories": 450,
+        "protein_grams": 40.0,
+        "carbs_grams": 20.0,
+        "fat_grams": 22.0,
+        "fiber_grams": 5.0,
+        "sodium_mg": 350.0,
+        "tags": ["heart-healthy"],
+        "ingredients": [
+          {"name": "chicken breast", "quantity": 6.0, "unit": "oz", "category": "protein", "notes": ""},
+          {"name": "mixed greens", "quantity": 2.0, "unit": "cup", "category": "produce", "notes": ""},
+          {"name": "olive oil", "quantity": 1.5, "unit": "tbsp", "category": "fat", "notes": ""}
+        ]
+      },
+      "afternoon_snack": {
+        "name": "Hummus and Vegetables",
+        "description": "Creamy hummus with raw vegetable dippers.",
+        "instructions": "Serve hummus with cut vegetables.",
+        "prep_time_minutes": 3,
+        "cook_time_minutes": 0,
+        "servings": 1,
+        "meal_type": "snack",
+        "cuisine_type": "Mediterranean",
+        "calories": 200,
+        "protein_grams": 8.0,
+        "carbs_grams": 22.0,
+        "fat_grams": 10.0,
+        "fiber_grams": 5.0,
+        "sodium_mg": 200.0,
+        "tags": ["quick"],
+        "ingredients": [
+          {"name": "hummus", "quantity": 0.25, "unit": "cup", "category": "pantry", "notes": ""},
+          {"name": "cucumber", "quantity": 1.0, "unit": "medium", "category": "produce", "notes": ""}
+        ]
+      }
+    },
+    "3": {
+      "breakfast": {
+        "name": "Smoothie Bowl",
+        "description": "Thick fruit smoothie topped with granola and seeds.",
+        "instructions": "Blend frozen fruit. Pour into bowl and add toppings.",
+        "prep_time_minutes": 5,
+        "cook_time_minutes": 0,
+        "servings": 1,
+        "meal_type": "breakfast",
+        "cuisine_type": "American",
+        "calories": 400,
+        "protein_grams": 15.0,
+        "carbs_grams": 65.0,
+        "fat_grams": 10.0,
+        "fiber_grams": 8.0,
+        "sodium_mg": 100.0,
+        "tags": ["quick"],
+        "ingredients": [
+          {"name": "frozen berries", "quantity": 1.0, "unit": "cup", "category": "produce", "notes": ""},
+          {"name": "protein powder", "quantity": 1.0, "unit": "scoop", "category": "pantry", "notes": ""},
+          {"name": "granola", "quantity": 0.25, "unit": "cup", "category": "pantry", "notes": ""}
+        ]
+      },
+      "lunch": {
+        "name": "Tuna Salad Sandwich",
+        "description": "Classic tuna salad on whole wheat bread.",
+        "instructions": "Mix tuna with mayo and celery. Spread on bread.",
+        "prep_time_minutes": 5,
+        "cook_time_minutes": 0,
+        "servings": 1,
+        "meal_type": "lunch",
+        "cuisine_type": "American",
+        "calories": 490,
+        "protein_grams": 35.0,
+        "carbs_grams": 45.0,
+        "fat_grams": 16.0,
+        "fiber_grams": 4.0,
+        "sodium_mg": 500.0,
+        "tags": ["quick"],
+        "ingredients": [
+          {"name": "tuna", "quantity": 5.0, "unit": "oz", "category": "protein", "notes": "canned in water"},
+          {"name": "whole wheat bread", "quantity": 2.0, "unit": "slice", "category": "grain", "notes": ""},
+          {"name": "light mayo", "quantity": 1.0, "unit": "tbsp", "category": "pantry", "notes": ""}
+        ]
+      },
+      "dinner": {
+        "name": "Shrimp Tacos",
+        "description": "Seasoned shrimp in corn tortillas with slaw.",
+        "instructions": "Season and cook shrimp. Make slaw. Assemble tacos.",
+        "prep_time_minutes": 15,
+        "cook_time_minutes": 10,
+        "servings": 1,
+        "meal_type": "dinner",
+        "cuisine_type": "Mexican",
+        "calories": 520,
+        "protein_grams": 38.0,
+        "carbs_grams": 50.0,
+        "fat_grams": 16.0,
+        "fiber_grams": 5.0,
+        "sodium_mg": 450.0,
+        "tags": ["quick"],
+        "ingredients": [
+          {"name": "shrimp", "quantity": 6.0, "unit": "oz", "category": "protein", "notes": ""},
+          {"name": "corn tortillas", "quantity": 3.0, "unit": "small", "category": "grain", "notes": ""},
+          {"name": "cabbage", "quantity": 1.0, "unit": "cup", "category": "produce", "notes": "shredded"}
+        ]
+      },
+      "afternoon_snack": {
+        "name": "Trail Mix",
+        "description": "Mixed nuts, seeds, and dried fruit.",
+        "instructions": "Mix all ingredients in a bowl.",
+        "prep_time_minutes": 1,
+        "cook_time_minutes": 0,
+        "servings": 1,
+        "meal_type": "snack",
+        "cuisine_type": "American",
+        "calories": 220,
+        "protein_grams": 6.0,
+        "carbs_grams": 25.0,
+        "fat_grams": 12.0,
+        "fiber_grams": 3.0,
+        "sodium_mg": 50.0,
+        "tags": ["quick"],
+        "ingredients": [
+          {"name": "mixed nuts", "quantity": 2.0, "unit": "tbsp", "category": "pantry", "notes": ""},
+          {"name": "dried cranberries", "quantity": 2.0, "unit": "tbsp", "category": "pantry", "notes": ""}
+        ]
+      }
+    },
+    "4": {
+      "breakfast": {
+        "name": "Whole Wheat Pancakes",
+        "description": "Fluffy whole wheat pancakes.",
+        "instructions": "Mix batter, cook on griddle.",
+        "prep_time_minutes": 5,
+        "cook_time_minutes": 10,
+        "servings": 1,
+        "meal_type": "breakfast",
+        "cuisine_type": "American",
+        "calories": 450,
+        "protein_grams": 18.0,
+        "carbs_grams": 72.0,
+        "fat_grams": 10.0,
+        "fiber_grams": 6.0,
+        "sodium_mg": 400.0,
+        "tags": [],
+        "ingredients": [
+          {"name": "whole wheat flour", "quantity": 0.5, "unit": "cup", "category": "grain", "notes": ""},
+          {"name": "egg", "quantity": 1.0, "unit": "large", "category": "protein", "notes": ""},
+          {"name": "milk", "quantity": 0.5, "unit": "cup", "category": "dairy", "notes": ""}
+        ]
+      },
+      "lunch": {
+        "name": "Black Bean Bowl",
+        "description": "Seasoned black beans with rice and avocado.",
+        "instructions": "Cook rice and beans. Season. Top with avocado.",
+        "prep_time_minutes": 5,
+        "cook_time_minutes": 20,
+        "servings": 1,
+        "meal_type": "lunch",
+        "cuisine_type": "Mexican",
+        "calories": 520,
+        "protein_grams": 22.0,
+        "carbs_grams": 80.0,
+        "fat_grams": 12.0,
+        "fiber_grams": 16.0,
+        "sodium_mg": 400.0,
+        "tags": ["meal-prep"],
+        "ingredients": [
+          {"name": "black beans", "quantity": 0.75, "unit": "cup", "category": "protein", "notes": ""},
+          {"name": "brown rice", "quantity": 0.5, "unit": "cup", "category": "grain", "notes": ""},
+          {"name": "avocado", "quantity": 0.5, "unit": "medium", "category": "produce", "notes": ""}
+        ]
+      },
+      "dinner": {
+        "name": "Baked Cod with Sweet Potato",
+        "description": "Herb-baked cod with roasted sweet potato.",
+        "instructions": "Season cod. Roast sweet potato. Bake cod 20 min.",
+        "prep_time_minutes": 10,
+        "cook_time_minutes": 25,
+        "servings": 1,
+        "meal_type": "dinner",
+        "cuisine_type": "American",
+        "calories": 480,
+        "protein_grams": 40.0,
+        "carbs_grams": 50.0,
+        "fat_grams": 8.0,
+        "fiber_grams": 6.0,
+        "sodium_mg": 350.0,
+        "tags": ["heart-healthy"],
+        "ingredients": [
+          {"name": "cod fillet", "quantity": 6.0, "unit": "oz", "category": "protein", "notes": ""},
+          {"name": "sweet potato", "quantity": 1.0, "unit": "medium", "category": "produce", "notes": ""},
+          {"name": "lemon", "quantity": 0.5, "unit": "medium", "category": "produce", "notes": ""}
+        ]
+      },
+      "afternoon_snack": {
+        "name": "Rice Cakes with Peanut Butter",
+        "description": "Crispy rice cakes topped with peanut butter.",
+        "instructions": "Spread peanut butter on rice cakes.",
+        "prep_time_minutes": 2,
+        "cook_time_minutes": 0,
+        "servings": 1,
+        "meal_type": "snack",
+        "cuisine_type": "American",
+        "calories": 220,
+        "protein_grams": 7.0,
+        "carbs_grams": 28.0,
+        "fat_grams": 10.0,
+        "fiber_grams": 2.0,
+        "sodium_mg": 150.0,
+        "tags": ["quick"],
+        "ingredients": [
+          {"name": "rice cakes", "quantity": 2.0, "unit": "piece", "category": "grain", "notes": ""},
+          {"name": "peanut butter", "quantity": 2.0, "unit": "tbsp", "category": "pantry", "notes": ""}
+        ]
+      }
+    },
+    "5": {
+      "breakfast": {
+        "name": "Avocado Toast",
+        "description": "Toasted whole wheat bread topped with mashed avocado.",
+        "instructions": "Toast bread. Mash avocado with lemon and salt. Spread on toast.",
+        "prep_time_minutes": 5,
+        "cook_time_minutes": 3,
+        "servings": 1,
+        "meal_type": "breakfast",
+        "cuisine_type": "American",
+        "calories": 380,
+        "protein_grams": 12.0,
+        "carbs_grams": 38.0,
+        "fat_grams": 22.0,
+        "fiber_grams": 8.0,
+        "sodium_mg": 200.0,
+        "tags": ["quick"],
+        "ingredients": [
+          {"name": "whole wheat bread", "quantity": 2.0, "unit": "slice", "category": "grain", "notes": ""},
+          {"name": "avocado", "quantity": 1.0, "unit": "medium", "category": "produce", "notes": ""},
+          {"name": "lemon juice", "quantity": 1.0, "unit": "tbsp", "category": "produce", "notes": ""}
+        ]
+      },
+      "lunch": {
+        "name": "Chicken Caesar Salad",
+        "description": "Classic caesar salad with grilled chicken.",
+        "instructions": "Grill chicken. Toss romaine with caesar dressing. Top with chicken.",
+        "prep_time_minutes": 10,
+        "cook_time_minutes": 15,
+        "servings": 1,
+        "meal_type": "lunch",
+        "cuisine_type": "American",
+        "calories": 480,
+        "protein_grams": 42.0,
+        "carbs_grams": 20.0,
+        "fat_grams": 22.0,
+        "fiber_grams": 3.0,
+        "sodium_mg": 550.0,
+        "tags": [],
+        "ingredients": [
+          {"name": "chicken breast", "quantity": 5.0, "unit": "oz", "category": "protein", "notes": ""},
+          {"name": "romaine lettuce", "quantity": 2.0, "unit": "cup", "category": "produce", "notes": ""},
+          {"name": "caesar dressing", "quantity": 2.0, "unit": "tbsp", "category": "pantry", "notes": ""}
+        ]
+      },
+      "dinner": {
+        "name": "Pork Tenderloin with Asparagus",
+        "description": "Herb-crusted pork tenderloin with roasted asparagus.",
+        "instructions": "Season pork. Roast at 400F for 25 min. Roast asparagus last 10 min.",
+        "prep_time_minutes": 10,
+        "cook_time_minutes": 25,
+        "servings": 1,
+        "meal_type": "dinner",
+        "cuisine_type": "American",
+        "calories": 540,
+        "protein_grams": 45.0,
+        "carbs_grams": 20.0,
+        "fat_grams": 28.0,
+        "fiber_grams": 4.0,
+        "sodium_mg": 400.0,
+        "tags": [],
+        "ingredients": [
+          {"name": "pork tenderloin", "quantity": 6.0, "unit": "oz", "category": "protein", "notes": ""},
+          {"name": "asparagus", "quantity": 1.0, "unit": "cup", "category": "produce", "notes": ""},
+          {"name": "garlic", "quantity": 2.0, "unit": "clove", "category": "produce", "notes": ""}
+        ]
+      },
+      "afternoon_snack": {
+        "name": "String Cheese and Apple",
+        "description": "Protein-rich string cheese with a fresh apple.",
+        "instructions": "Serve together.",
+        "prep_time_minutes": 1,
+        "cook_time_minutes": 0,
+        "servings": 1,
+        "meal_type": "snack",
+        "cuisine_type": "American",
+        "calories": 200,
+        "protein_grams": 8.0,
+        "carbs_grams": 25.0,
+        "fat_grams": 7.0,
+        "fiber_grams": 4.0,
+        "sodium_mg": 200.0,
+        "tags": ["quick"],
+        "ingredients": [
+          {"name": "string cheese", "quantity": 1.0, "unit": "piece", "category": "dairy", "notes": ""},
+          {"name": "apple", "quantity": 1.0, "unit": "medium", "category": "produce", "notes": ""}
+        ]
+      }
+    },
+    "6": {
+      "breakfast": {
+        "name": "Veggie Omelette",
+        "description": "Fluffy omelette filled with fresh vegetables.",
+        "instructions": "Beat eggs. Cook in pan. Add vegetables. Fold.",
+        "prep_time_minutes": 5,
+        "cook_time_minutes": 10,
+        "servings": 1,
+        "meal_type": "breakfast",
+        "cuisine_type": "American",
+        "calories": 360,
+        "protein_grams": 28.0,
+        "carbs_grams": 12.0,
+        "fat_grams": 22.0,
+        "fiber_grams": 3.0,
+        "sodium_mg": 300.0,
+        "tags": ["quick"],
+        "ingredients": [
+          {"name": "eggs", "quantity": 3.0, "unit": "large", "category": "protein", "notes": ""},
+          {"name": "mushrooms", "quantity": 0.5, "unit": "cup", "category": "produce", "notes": ""},
+          {"name": "spinach", "quantity": 0.5, "unit": "cup", "category": "produce", "notes": ""}
+        ]
+      },
+      "lunch": {
+        "name": "Mediterranean Platter",
+        "description": "Falafel, hummus, and pita with cucumber and tomato.",
+        "instructions": "Arrange falafel, hummus, pita, and vegetables on plate.",
+        "prep_time_minutes": 5,
+        "cook_time_minutes": 0,
+        "servings": 1,
+        "meal_type": "lunch",
+        "cuisine_type": "Mediterranean",
+        "calories": 520,
+        "protein_grams": 20.0,
+        "carbs_grams": 68.0,
+        "fat_grams": 18.0,
+        "fiber_grams": 8.0,
+        "sodium_mg": 550.0,
+        "tags": [],
+        "ingredients": [
+          {"name": "falafel", "quantity": 4.0, "unit": "piece", "category": "protein", "notes": ""},
+          {"name": "pita bread", "quantity": 1.0, "unit": "piece", "category": "grain", "notes": ""},
+          {"name": "hummus", "quantity": 3.0, "unit": "tbsp", "category": "pantry", "notes": ""}
+        ]
+      },
+      "dinner": {
+        "name": "Chicken Tikka Masala",
+        "description": "Tender chicken in creamy tomato sauce.",
+        "instructions": "Marinate chicken. Cook sauce. Simmer chicken in sauce.",
+        "prep_time_minutes": 15,
+        "cook_time_minutes": 30,
+        "servings": 1,
+        "meal_type": "dinner",
+        "cuisine_type": "Indian",
+        "calories": 540,
+        "protein_grams": 42.0,
+        "carbs_grams": 38.0,
+        "fat_grams": 22.0,
+        "fiber_grams": 4.0,
+        "sodium_mg": 500.0,
+        "tags": [],
+        "ingredients": [
+          {"name": "chicken breast", "quantity": 6.0, "unit": "oz", "category": "protein", "notes": ""},
+          {"name": "tomato sauce", "quantity": 0.5, "unit": "cup", "category": "pantry", "notes": ""},
+          {"name": "coconut milk", "quantity": 0.25, "unit": "cup", "category": "pantry", "notes": ""}
+        ]
+      },
+      "afternoon_snack": {
+        "name": "Edamame",
+        "description": "Steamed edamame with sea salt.",
+        "instructions": "Steam edamame. Sprinkle with salt.",
+        "prep_time_minutes": 2,
+        "cook_time_minutes": 5,
+        "servings": 1,
+        "meal_type": "snack",
+        "cuisine_type": "Asian",
+        "calories": 190,
+        "protein_grams": 17.0,
+        "carbs_grams": 14.0,
+        "fat_grams": 8.0,
+        "fiber_grams": 8.0,
+        "sodium_mg": 150.0,
+        "tags": ["quick"],
+        "ingredients": [
+          {"name": "edamame", "quantity": 1.0, "unit": "cup", "category": "protein", "notes": ""}
+        ]
+      }
+    }
+  },
+  "daily_nutrition_summary": {
+    "0": {"calories": 1980, "protein_grams": 145.0, "carbs_grams": 195.0, "fat_grams": 63.0},
+    "1": {"calories": 1950, "protein_grams": 140.0, "carbs_grams": 190.0, "fat_grams": 62.0},
+    "2": {"calories": 2020, "protein_grams": 152.0, "carbs_grams": 202.0, "fat_grams": 66.0},
+    "3": {"calories": 1970, "protein_grams": 148.0, "carbs_grams": 198.0, "fat_grams": 64.0},
+    "4": {"calories": 2000, "protein_grams": 150.0, "carbs_grams": 200.0, "fat_grams": 65.0},
+    "5": {"calories": 1900, "protein_grams": 135.0, "carbs_grams": 180.0, "fat_grams": 60.0},
+    "6": {"calories": 2050, "protein_grams": 155.0, "carbs_grams": 205.0, "fat_grams": 68.0}
+  }
+}

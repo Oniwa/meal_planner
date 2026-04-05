@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Nutrition Plan — {{ plan.label }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">{{ plan.label }}</h1>
+    <a href="{% url 'nutrition_import' %}" class="text-sm text-green-600 hover:underline">Import new plan</a>
+  </div>
+
+  <!-- Calorie & Macro Targets -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white shadow rounded-lg p-4 text-center">
+      <div class="text-2xl font-bold text-green-600">{{ plan.daily_calories }}</div>
+      <div class="text-sm text-gray-500">Calories/day</div>
+    </div>
+    <div class="bg-white shadow rounded-lg p-4 text-center">
+      <div class="text-2xl font-bold text-blue-600">{{ plan.protein_grams }}g</div>
+      <div class="text-sm text-gray-500">Protein</div>
+    </div>
+    <div class="bg-white shadow rounded-lg p-4 text-center">
+      <div class="text-2xl font-bold text-yellow-600">{{ plan.carbs_grams }}g</div>
+      <div class="text-sm text-gray-500">Carbs</div>
+    </div>
+    <div class="bg-white shadow rounded-lg p-4 text-center">
+      <div class="text-2xl font-bold text-red-600">{{ plan.fat_grams }}g</div>
+      <div class="text-sm text-gray-500">Fat</div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Cooking Style -->
+    <div class="bg-white shadow rounded-lg p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Cooking Style</h2>
+      <dl class="space-y-2">
+        <div class="flex justify-between">
+          <dt class="text-gray-500">Skill Level</dt>
+          <dd class="font-medium capitalize">{{ plan.cooking_skill_level }}</dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-gray-500">Max Cook Time</dt>
+          <dd class="font-medium">{{ plan.max_cook_time_minutes }} min</dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-gray-500">Meal Variety</dt>
+          <dd class="font-medium capitalize">{{ plan.meal_variety }}</dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-gray-500">Meal Prep Friendly</dt>
+          <dd class="font-medium">{% if plan.meal_prep_friendly %}Yes{% else %}No{% endif %}</dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-gray-500">Night Snack</dt>
+          <dd class="font-medium">{% if plan.include_night_snack %}Yes{% else %}No{% endif %}</dd>
+        </div>
+      </dl>
+    </div>
+
+    <!-- Health Flags -->
+    <div class="bg-white shadow rounded-lg p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Health Goals</h2>
+      <div class="flex flex-wrap gap-2">
+        {% if plan.heart_healthy %}
+          <span class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">Heart Healthy</span>
+        {% endif %}
+        {% if plan.low_sodium %}
+          <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Low Sodium</span>
+        {% endif %}
+        {% if plan.low_sugar %}
+          <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Low Sugar</span>
+        {% endif %}
+        {% if plan.diabetic_friendly %}
+          <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">Diabetic Friendly</span>
+        {% endif %}
+        {% if plan.anti_inflammatory %}
+          <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Anti-Inflammatory</span>
+        {% endif %}
+        {% if plan.is_vegetarian %}
+          <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Vegetarian</span>
+        {% endif %}
+        {% if plan.is_vegan %}
+          <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Vegan</span>
+        {% endif %}
+        {% if plan.is_gluten_free %}
+          <span class="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">Gluten-Free</span>
+        {% endif %}
+        {% if plan.is_dairy_free %}
+          <span class="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">Dairy-Free</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Preferences -->
+    <div class="bg-white shadow rounded-lg p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Preferences</h2>
+      <dl class="space-y-3">
+        {% if plan.allergies %}
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Allergies</dt>
+            <dd class="mt-1">{{ plan.allergies|join:", " }}</dd>
+          </div>
+        {% endif %}
+        {% if plan.disliked_foods %}
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Disliked Foods</dt>
+            <dd class="mt-1">{{ plan.disliked_foods|join:", " }}</dd>
+          </div>
+        {% endif %}
+        {% if plan.liked_foods %}
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Liked Foods</dt>
+            <dd class="mt-1">{{ plan.liked_foods|join:", " }}</dd>
+          </div>
+        {% endif %}
+        {% if plan.preferred_cuisines %}
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Preferred Cuisines</dt>
+            <dd class="mt-1">{{ plan.preferred_cuisines|join:", " }}</dd>
+          </div>
+        {% endif %}
+      </dl>
+    </div>
+
+    <!-- Notes -->
+    {% if plan.notes %}
+    <div class="bg-white shadow rounded-lg p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Notes</h2>
+      <p class="text-gray-700 whitespace-pre-wrap">{{ plan.notes }}</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="mt-6">
+    <a href="{% url 'meals_current' %}" class="inline-block bg-green-600 text-white py-2 px-6 rounded-md font-medium hover:bg-green-700">
+      Go to Meal Plan
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+<div id="meal-cell-{{ pm.id }}" class="bg-white rounded-lg p-3 shadow-sm border border-gray-100 relative">
+  <a href="{% url 'meal_detail' pm.id %}" class="block">
+    <div class="font-medium text-gray-900 text-sm leading-tight mb-1">{{ pm.recipe.name }}</div>
+    <div class="text-xs text-gray-500">{{ pm.recipe.calories }} kcal</div>
+    <div class="text-xs text-gray-400">P:{{ pm.recipe.protein_grams|floatformat:0 }}g C:{{ pm.recipe.carbs_grams|floatformat:0 }}g F:{{ pm.recipe.fat_grams|floatformat:0 }}g</div>
+  </a>
+  {% if pm.was_swapped %}
+    <span class="absolute top-1 right-1 text-xs text-orange-500" title="Swapped">&#8635;</span>
+  {% endif %}
+  <button
+    class="mt-2 w-full text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 py-1 px-2 rounded swap-btn"
+    hx-post="{% url 'meals_swap' %}"
+    hx-vals='{"planned_meal_id": "{{ pm.id }}"}'
+    hx-target="#meal-cell-{{ pm.id }}"
+    hx-swap="outerHTML"
+    hx-indicator="#swap-indicator-{{ pm.id }}"
+  >
+    Swap
+  </button>
+  <span id="swap-indicator-{{ pm.id }}" class="htmx-indicator text-xs text-gray-400 ml-1">Loading...</span>
+</div>

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Import Nutrition Plan{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+  <h1 class="text-3xl font-bold text-gray-900 mb-6">Import Nutrition Plan</h1>
+
+  {% if error %}
+    <div class="mb-4 p-4 bg-red-100 border border-red-300 rounded-lg text-red-800" id="import-error">
+      <strong>Error:</strong> {{ error }}
+    </div>
+  {% endif %}
+
+  <div class="bg-white shadow rounded-lg p-6">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="mb-4">
+        <label for="json_data" class="block text-sm font-medium text-gray-700 mb-2">
+          Paste your nutrition plan JSON:
+        </label>
+        <textarea
+          id="json_data"
+          name="json_data"
+          rows="16"
+          class="w-full border border-gray-300 rounded-md px-3 py-2 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          placeholder='{ "label": "My Plan", "daily_calories": 2000, ... }'
+        >{{ json_data }}</textarea>
+      </div>
+
+      <div class="mb-6">
+        <label for="json_file" class="block text-sm font-medium text-gray-700 mb-2">
+          Or upload a JSON file:
+        </label>
+        <input
+          type="file"
+          id="json_file"
+          name="json_file"
+          accept=".json"
+          class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+        >
+      </div>
+
+      <button
+        type="submit"
+        class="w-full bg-green-600 text-white py-2 px-4 rounded-md font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+      >
+        Import Plan
+      </button>
+    </form>
+  </div>
+
+  <div class="mt-6 text-sm text-gray-500">
+    <p>Generate a nutrition plan using the dietitian agent CLI:</p>
+    <code class="block mt-1 bg-gray-100 p-2 rounded">claude --agent .claude/agents/dietitian_agent.md</code>
+    <p class="mt-2">The plan file will be saved to <code>nutrition_plans/</code>.</p>
+  </div>
+</div>
+{% endblock %}
