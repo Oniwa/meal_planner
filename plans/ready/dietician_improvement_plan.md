@@ -36,20 +36,53 @@ The agent produced a technically valid JSON but made three categories of errors:
 
 ---
 
+### Change 0: Biometric Fields (Prerequisite — implement with P0)
+
+**Problem:** The current schema captures no biometric data. Age, weight, height, and sex are all required for Mifflin-St Jeor TDEE calculation. Without them, the macro logic in Changes 2 and 3 cannot be implemented.
+
+**Solution:** Add biometric fields to the schema and interview.
+
+#### New Interview Questions (always ask)
+
+- Age
+- Current weight (lbs)
+- Height (feet and inches)
+- For the calorie calculation: *"Do you want me to use a male or female metabolic baseline, or would you prefer I use an average?"* — options: male / female / average
+- Primary goal — one of: weight loss, muscle gain, maintenance, general health
+
+#### New JSON Fields
+
+```json
+"age": 43,
+"weight_lbs": 240,
+"height_inches": 70,
+"sex": "male",
+"primary_goal": "weight_loss"
+```
+
+- `sex`: one of `"male"`, `"female"`, `"prefer_not_to_say"`. If `"prefer_not_to_say"`, use averaged Mifflin-St Jeor constant (`-78`) and note in report that estimate uses an averaged baseline
+- `primary_goal`: one of `"weight_loss"`, `"muscle_gain"`, `"maintenance"`, `"general_health"`
+
+---
+
 ### Change 1: Activity Intelligence Branch
 
 **Problem:** The agent currently treats activity as a generic lifestyle descriptor. It collects that the user does karate but uses none of that data in macro calculation.
 
-**Solution:** Add a dedicated activity branch to the interview flow.
+**Solution:** Add a universal activity probe to the interview — ask every user, not just those who volunteer exercise information.
 
 #### New Interview Questions
 
-Trigger this branch if the user mentions any sport, martial art, or structured exercise:
+Ask every user:
+
+- *"Do you do any structured exercise — gym, sport, classes, martial arts?"*
+
+If yes, branch deeper:
 
 - How many sessions per week?
 - How long is each session (minutes)?
-- How would you describe the intensity — light, moderate, or hard?
-- Does a fitness tracker report calorie burn for those sessions? If so, what does it typically say?
+- *"On a scale of light, moderate, or hard — light meaning you could hold a full conversation, hard meaning you're working too hard to talk — how would you rate your typical session?"* (Agent maps answer to `"light"` / `"moderate"` / `"high"` using judgment)
+- Does a fitness tracker report calorie burn for those sessions? If so, what does it typically say? (Captured for reference only — not used in macro calculation)
 
 #### New JSON Fields
 
@@ -75,6 +108,18 @@ Add to schema:
 
 **Solution:** Replace the current flat estimation block with tiered conditional logic.
 
+#### TDEE Base Formula
+
+Use **Mifflin-St Jeor** as the base formula:
+
+- Male: `(10 × kg) + (6.25 × cm) - (5 × age) + 5`
+- Female: `(10 × kg) + (6.25 × cm) - (5 × age) - 161`
+- prefer_not_to_say: use constant `-78` (average of male and female)
+
+Convert from schema fields: `weight_kg = weight_lbs ÷ 2.205`, `height_cm = height_inches × 2.54`
+
+Then apply activity multiplier using `activity_sessions_per_week` and `activity_intensity` — not a generic activity level selection.
+
 #### Protein Calculation Rules
 
 | Condition | Protein Target |
@@ -86,7 +131,7 @@ Add to schema:
 
 #### Calorie Calculation Rules
 
-- Base TDEE should incorporate an activity multiplier using `activity_sessions_per_week` and `activity_intensity`, not a generic activity level selection
+- Base TDEE incorporates activity multiplier using `activity_sessions_per_week` and `activity_intensity`, not a generic activity level selection
 - If the user is doing high-intensity activity 2x+/week, cap the recommended deficit at **300 cal/day maximum**
 - Flag this cap explicitly during the confirmation step with plain-language rationale
 
@@ -212,7 +257,7 @@ After writing the JSON file, generate the report field content using the finaliz
 
 **Problem:** The current schema has no minimum calorie floor. The deficit cap in Change 2 reduces the risk of undereating, but nothing prevents a downstream agent from scheduling rest days too low. For a user at this size and activity level, dropping below ~1,800 cal/day is counterproductive and risks muscle loss, fatigue, and impaired recovery.
 
-**Solution:** Add a `calorie_floor_grams` field derived from bodyweight at finalization time.
+**Solution:** Add a `calorie_floor_calories` field derived from bodyweight at finalization time.
 
 #### New JSON Field
 
@@ -224,7 +269,7 @@ After writing the JSON file, generate the report field content using the finaliz
 
 - Default: `10 × bodyweight_lbs` (e.g. 240 lbs → 1,800 cal floor)
 - If `activity_intensity == "high"`: use `11 × bodyweight_lbs` (e.g. 240 lbs → 2,640 cal floor)
-- Cap at 2,000 minimum regardless of bodyweight — no adult should go below 2,000 on a high-intensity training day
+- Hard safety minimum: **1,400 cal** regardless of bodyweight or activity — no formula result should produce a floor below this
 
 Agent must surface this in the confirmation step and include it in the report's Key Rules section.
 
@@ -249,6 +294,8 @@ Agent must surface this in the confirmation step and include it in the report's 
 
 - `medications_notes`: free text; empty string if none disclosed
 - `discuss_with_physician`: set to `true` automatically if any clinical flag is true (`heart_healthy`, `diabetic_friendly`, `anti_inflammatory`) — ensures the report always includes a physician reminder for clinical plans
+  - If `heart_healthy: true` but no medications disclosed: use soft language — *"If you're working with a doctor on cholesterol management, share this plan with them"*
+  - If `medications_notes` is non-empty: use stronger language — *"Given the medications you mentioned, some food interactions are worth discussing with your doctor or pharmacist"*
 
 ---
 
@@ -260,7 +307,7 @@ Agent must surface this in the confirmation step and include it in the report's 
 
 #### New Interview Question
 
-Trigger when `heart_healthy: true` or when weight loss is a stated goal:
+Trigger when `heart_healthy: true` or `primary_goal == "weight_loss"`:
 
 > *"One last thing — do you drink alcohol? If so, roughly how often? I ask because it affects both calorie planning and cholesterol management, not to judge."*
 
@@ -282,7 +329,7 @@ Trigger when `heart_healthy: true` or when weight loss is a stated goal:
 
 **Solution:** Add ramp-up guidance to the report and a `fiber_current_estimate_grams` field to capture baseline.
 
-#### New Interview Question (when `cholesterol_focus: true` or fiber guidance will be issued)
+#### New Interview Question (when `cholesterol_focus: true` or `anti_inflammatory: true`)
 
 > *"How would you describe your current vegetable, bean, and whole grain intake — pretty low, moderate, or already quite high?"*
 
@@ -299,7 +346,7 @@ Map answers to an estimated current fiber intake:
 
 #### Report Instruction
 
-If `fiber_current_estimate_grams < 25`, the report's cholesterol section must include a ramp-up note:
+If `fiber_current_estimate_grams < 25`, the report's cholesterol/anti-inflammatory section must include a ramp-up note:
 
 > *"Fiber increase: Don't jump to the target amount overnight. Add one high-fiber food per week for the first 3–4 weeks, drink at least 2–3 liters of water daily, and let your gut adapt. Doing this too fast causes bloating and gas — slow ramp-up gets you to the same place without the friction."*
 
@@ -370,6 +417,11 @@ The confirmation must surface the **reasoning**, not just the numbers. This is t
 
 ```json
 {
+  "age": null,
+  "weight_lbs": null,
+  "height_inches": null,
+  "sex": null,
+  "primary_goal": null,
   "activity_type": null,
   "activity_sessions_per_week": null,
   "activity_minutes_per_session": null,
@@ -380,6 +432,7 @@ The confirmation must surface the **reasoning**, not just the numbers. This is t
   "saturated_fat_limit_grams": null,
   "soluble_fiber_target_grams": null,
   "omega3_sessions_per_week": null,
+  "fiber_current_estimate_grams": null,
   "training_day_calories": null,
   "training_day_carbs_grams": null,
   "training_day_protein_grams": null,
@@ -388,15 +441,22 @@ The confirmation must surface the **reasoning**, not just the numbers. This is t
   "rest_day_carbs_grams": null,
   "rest_day_protein_grams": null,
   "rest_day_fat_grams": null,
+  "calorie_floor_calories": null,
+  "medications_notes": "",
+  "discuss_with_physician": false,
+  "alcohol_drinks_per_week": null,
   "report": ""
 }
 ```
 
 ### Field Rules to Add
 
+- `sex`: one of `"male"`, `"female"`, `"prefer_not_to_say"`; use averaged Mifflin-St Jeor constant (`-78`) for `prefer_not_to_say`
+- `primary_goal`: one of `"weight_loss"`, `"muscle_gain"`, `"maintenance"`, `"general_health"`
 - `activity_intensity`: one of `"light"`, `"moderate"`, `"high"`, or `null`
-- `glycolytic_sport`: boolean; true for martial arts, running, cycling, HIIT, team sports
+- `glycolytic_sport`: boolean; agent applies physiological definition — any activity relying on repeated short bursts of high-intensity effort or sustained cardio above ~70% max HR
 - `cholesterol_focus`: boolean; true only if heart_healthy AND user confirmed cholesterol is a specific clinical concern
+- `calorie_floor_calories`: integer; `10 × weight_lbs` (sedentary/moderate) or `11 × weight_lbs` (high intensity); hard minimum 1,400
 - All `training_day_*` and `rest_day_*` fields: integers or `null` — null if carb cycling does not apply
 - `report`: markdown string; never empty string; always populated
 
@@ -408,22 +468,22 @@ The confirmation must surface the **reasoning**, not just the numbers. This is t
 
 ## Implementation Priority
 
-| Priority | Change | Effort |
-|---|---|---|
-| P0 | Change 2: Sports nutrition macro logic | Medium |
-| P0 | Change 3: Age-aware modifier | Low |
-| P1 | Change 1: Activity intelligence branch + fields | Medium |
-| P1 | Change 6: Report field | Medium |
-| P1 | Change 8: Calorie floor field | Low |
-| P2 | Change 5: Training day carb cycling | Low |
-| P2 | Change 4: Cholesterol branch deepening | Low |
-| P2 | Change 12: Liked/disliked foods — deeper probe | Low |
-| P2 | Change 13: Sodium awareness for cardiovascular plans | Low |
-| P3 | Change 7: Smarter confirmation step | Low |
-| P3 | Change 9: Medication and supplement field | Low |
-| P3 | Change 10: Alcohol probe | Low |
-| P3 | Change 11: Fiber ramp-up guidance | Low |
+| Priority | Pass | Changes | Notes |
+|---|---|---|---|
+| P0 | Pass 1 | Change 0 (biometrics) + Change 2 (macro logic) + Change 3 (age modifier) | Biometrics are a prerequisite for macro logic; implement together |
+| P1 | Pass 2 | Change 1 (activity branch) + Change 5 (carb cycling) + Change 6 (report) + Change 8 (calorie floor) | Changes 1 and 5 are coupled — implement together |
+| P2 | Pass 3 | Change 4 (cholesterol branch) + Change 12 (food probe) + Change 13 (sodium) | |
+| P3 | Pass 4 | Change 7 (confirmation) + Change 9 (medications) + Change 10 (alcohol) + Change 11 (fiber) | Change 7 implements once covering all prior changes |
+| Future | Post-P3 | Change 14 (supplement awareness) | Report-only; conditional on existing flags |
 
 ---
 
-*Plan authored April 2026. Implement Changes 2 and 3 first — they fix the most consequential errors with the least schema disruption.*
+### Change 14: Supplement Awareness (Future — Post-P3)
+
+See [`supplement_awareness_plan.md`](../in_review/supplement_awareness_plan.md) for full details.
+
+Report-only change. No new schema fields or interview questions. Implement after P3 is complete.
+
+---
+
+*Plan authored April 2026. Decisions finalized via grilling session April 2026. Implement Pass 1 (P0) first — fixes the most consequential errors with the least schema disruption.*
