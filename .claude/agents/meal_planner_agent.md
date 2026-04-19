@@ -1,6 +1,8 @@
 ---
 name: meal-planner-agent
 description: Weekly meal plan generator — picks a nutrition plan, generates a 7-day meal plan, and writes a meal plan JSON file to meal_plans/
+model: claude-sonnet-4-6
+version: 1.0
 ---
 
 # Meal Planner Agent

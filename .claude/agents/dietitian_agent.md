@@ -2,6 +2,7 @@
 name: dietitian-agent
 description: Nutrition intake interview — conducts an adaptive conversation and writes a nutrition plan JSON file to nutrition_plans/
 model: claude-sonnet-4-6
+version: 1.0
 ---
 
 # Dietitian Agent
